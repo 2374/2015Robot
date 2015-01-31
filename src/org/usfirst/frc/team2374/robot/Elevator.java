@@ -25,7 +25,7 @@ public class Elevator {
 	
 	//constants
 	public static final double ENCODER_COUNTS_TO_FEET=0.01; //NEEDS TESTING
-	
+	public static final double ADJUSTMENT_SCALE=0.1;
 	//methods
 	
 	//constructor
@@ -41,19 +41,27 @@ public class Elevator {
 		jag2.set(speed);
 	}
 	
-	//ever heard of parameters? just use set instead
-	public void go(double speed){//if go, set jags to go forwards at desired speed
-        jag1.set(speed);
-        jag2.set(speed);
-    }
-    public void stop(){//if stop, halt both jaguars
-        jag1.set(0);
-        jag2.set(0);
-    }
-    public void reverse(double speed){//if reverse, set jags to reverse at desired speed
-        jag1.set(-speed);
-        jag2.set(-speed);
-    }
+	public boolean followCommand(Command2374 command){
+		double difference=command.distance-getElevatorPosition();
+		
+		if(Math.abs(difference)>0.3){
+			double speed=difference*ADJUSTMENT_SCALE;//PID
+			//adjust magnitude if the speed is too fast or slow
+			if(Math.abs(speed)<0.1)speed=Math.signum(difference)*0.1;
+			if(Math.abs(speed)>command.speed)speed=Math.signum(difference)*command.speed;
+			set(speed);
+		}
+		else{
+			set(0);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public double getElevatorPosition(){
+		return (double)encoder.get()*ENCODER_COUNTS_TO_FEET;
+	}
 	
     /*METHODS FOR AUTOMATION THAT WE SHOULD HAVE
      * Stops: bottom, one, two, top

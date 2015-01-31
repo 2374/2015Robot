@@ -11,8 +11,8 @@ public class Elevator {
 	//int portr = 0;
 	//int portl = 0;
 	//encoder ports
-	int portA = 0;
-	int portB = 0;
+	int portA = 2;
+	int portB = 3;
 	
 	//motors
 	Jaguar jag1;
@@ -22,6 +22,9 @@ public class Elevator {
 	Encoder encoder; //encoder
 	//limit switch(ES?)
 	//Hall effect? in the middle
+	
+	//constants
+	public static final double ENCODER_COUNTS_TO_FEET=0.01; //NEEDS TESTING
 	
 	//methods
 	

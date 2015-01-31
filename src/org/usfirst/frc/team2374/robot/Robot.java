@@ -5,30 +5,20 @@ import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 
-/**
- * This is a demo program showing the use of the RobotDrive class, specifically it 
- * contains the code necessary to operate a robot with tank drive.
- *
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the SampleRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
- *
- * WARNING: While it may look like a good choice to use for your code if you're inexperienced,
- * don't. Unless you know what you are doing, complex code will be much more difficult under
- * this system. Use IterativeRobot or Command-Based instead if you're new.
- */
 public class Robot extends SampleRobot {
     Joystick joystick;
     CommandManager commandManager;
     Drivetrain drivetrain;
     Elevator elevator;
+    VisionProcessor vision;
+    boolean buttonPressed;
     public Robot() {
         joystick=new Joystick(0);
         commandManager=new CommandManager();
         drivetrain=new Drivetrain();
         elevator=new Elevator(4,5);
+        vision=new VisionProcessor();
+        
     }
     
     public void autonomous(){
@@ -58,8 +48,27 @@ public class Robot extends SampleRobot {
     			
     		}
     		else{
+    			commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
+    			
     			drivetrain.preciseTank(-joystick.getRawAxis(1), -joystick.getRawAxis(5));
     			elevator.set(joystick.getRawAxis(3)-joystick.getRawAxis(2));//Ian's cool controller
+    			
+    			//target cycling code
+    			if(joystick.getRawButton(5)){
+    				if(!buttonPressed){
+    					buttonPressed=true;
+    					vision.changeTargets(true);
+    				}
+    			}
+    			else if(joystick.getRawButton(6)){
+    				if(!buttonPressed){
+    					buttonPressed=true;
+    					vision.changeTargets(false);
+    				}
+    			}
+    			else{
+    				buttonPressed=false;
+    			}
     		}
     		Timer.delay(0.005);
     	}

@@ -21,26 +21,17 @@ import edu.wpi.first.wpilibj.Timer;
  * this system. Use IterativeRobot or Command-Based instead if you're new.
  */
 public class Robot extends SampleRobot {
-    RobotDrive myRobot;  // class that handles basic drive operations
-    Joystick leftStick;  // set to ID 1 in DriverStation
-    Joystick rightStick; // set to ID 2 in DriverStation
+    Joystick joystick;
     public Robot() {
-        myRobot = new RobotDrive(0, 1);
-        myRobot.setExpiration(0.1);
-        leftStick = new Joystick(0);
-        rightStick = new Joystick(1);
+        joystick=new Joystick(0);
     }
-
     
-    /**
-     * Runs the motors with tank steering.
-     */
+    public void autonomous(){
+    	
+    }
+    
     public void operatorControl() {
-        myRobot.setSafetyEnabled(true);
-        while (isOperatorControl() && isEnabled()) {
-        	myRobot.tankDrive(leftStick, rightStick);
-            Timer.delay(0.005);		// wait for a motor update time
-        }
+        Timer.delay(0.005);
     }
 
 }

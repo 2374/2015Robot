@@ -2,6 +2,7 @@ package org.usfirst.frc.team2374.robot;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Jaguar;
+import edu.wpi.first.wpilibj.Talon;
 
 public class Drivetrain {
 	
@@ -12,7 +13,7 @@ public class Drivetrain {
 	
 	static final double AUTO_SPEED_SCALE=0.3;//motor speed per foot
 	
-	Jaguar l1, l2, r1, r2;//jaguars, pretty normal
+	Talon l1, l2, r1, r2;//jaguars, pretty normal
 	CalibratedGyro gyro;//sensors
 	Encoder encoder;
 	int state;
@@ -20,10 +21,10 @@ public class Drivetrain {
 	double targetHeading, targetDistance; //used for automatic movement
 	
 	public Drivetrain(){
-		l1=new Jaguar(0);//ports, to be changed later
-		l2=new Jaguar(1);
-		r1=new Jaguar(2);
-		r2=new Jaguar(3);
+		l1=new Talon(0);//ports, to be changed later
+		l2=new Talon(1);
+		r1=new Talon(2);
+		r2=new Talon(3);
 		
 		gyro=new CalibratedGyro(0);//more ports :P
 		

@@ -9,7 +9,7 @@ public class Drivetrain {
 	static final double ENCODER_COUNTS_TO_FEET=0.05;//for prototype robot
 	
 	static final double ANGULAR_ADJUSTMENT_SCALE=0.02;//motor speed per degree
-	static final double ANGULAR_ADJUSTMENT_MAX=0.5;//maximum angle speed
+	static final double ANGULAR_ADJUSTMENT_MAX=0.5;//maximum angle speed 
 	
 	static final double AUTO_SPEED_SCALE=0.3;//motor speed per foot
 	
@@ -63,11 +63,13 @@ public class Drivetrain {
 		//are we in position?
 		if(Math.abs(angleDifference)<=3 && Math.abs(posDifference)<=0.5){
 			//stop
-			setMotors(0,0);
+			setMotorsQuadratic(0,0); //for Ian's practice
+			//setMotors(0,0);
 			//we followed the command, return confirmation
 			return true;
 		}
-		setMotors(speed+turnSpeed,speed-turnSpeed);
+		setMotorsQuadratic(speed+turnSpeed,speed-turnSpeed);//for Ian's practice
+		//setMotors(speed+turnSpeed,speed-turnSpeed);
 		
 		return false;//we still have more commands to follow
 	}
@@ -95,7 +97,8 @@ public class Drivetrain {
 		turn=deadbandScale(turn);
 		
 		//turns them back into left/right, sets motors
-		setMotors(forwards+turn,forwards-turn);
+		setMotorsQuadratic(forwards+turn,forwards-turn); //for Ian's practice
+		//setMotors(forwards+turn,forwards-turn);
 	}
 	
 	double quadraticScale(double value){
@@ -128,6 +131,22 @@ public class Drivetrain {
 		l2.set(-ls2);
 		r1.set(rs2);
 		r2.set(rs2);
+	}
+	
+	//Ian wanted to have a drivetrain like last year's with speed ramping for testing purposes
+	//This sets motors quadratically
+	public void setMotorsQuadratic(double lspeed, double rspeed){
+		//square your speeds 
+		//double leftspeed = lspeed*lspeed;
+		//double rightspeed = rspeed*rspeed;
+		//quadratic scale your speeds
+		double leftspeed = quadraticScale(lspeed);
+		double rightspeed = quadraticScale(rspeed);
+		//set speeds with signs as according to SetMotors method that Peter wrote; PLEASE CHECK
+		l1.set(-leftspeed);
+		l2.set(-leftspeed);
+		r1.set(rightspeed);
+		r2.set(rightspeed);
 	}
 	public void resetGyro(){
 		gyro.reset();

@@ -13,7 +13,7 @@ public class Elevator {
 	//encoder ports
 	int portA = 2;
 	int portB = 3;
-	
+	final double ELEVATOR_HEIGHT = 5.0 ;
 	//motors
 	Jaguar jag1;
 	Jaguar jag2;
@@ -63,6 +63,7 @@ public class Elevator {
 		return (double)encoder.get()*ENCODER_COUNTS_TO_FEET;
 	}
 	
+
     /*METHODS FOR AUTOMATION THAT WE SHOULD HAVE
      * Stops: bottom, one, two, top
      *public void goToTop() //top of tote at top of elevator

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2374.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Jaguar;
 
@@ -20,12 +21,22 @@ public class Elevator {
 	
 	//sensors
 	Encoder encoder; //encoder
-	//limit switch(ES?)
+	
+	//limit switch
+	int switchport = 1; //PLEASE CHANGE TO ACTUAL PORT #
+	DigitalInput limitSwitch = new DigitalInput(switchport);
+	
 	//Hall effect? in the middle
 	
 	//constants
 	public static final double ENCODER_COUNTS_TO_FEET=0.01; //NEEDS TESTING
 	public static final double ADJUSTMENT_SCALE=0.1;
+	//for encoder
+	public static final double TOP = 5; //NEEDS ACTUAL VALUE //for highest elevator can go
+	public static final double BOTTOM = 0; //PLEASE VERIFY //for lowest elevator can go
+	public static final double PICKUP_POSITION = 2.5; //NEEDS ACTUAL VALUE //for picking up a tote
+	public static final double INTAKE_POSITION = 3; //NEEDS ACTUAL VALUE //for lifting stack above next tote to be added to stack
+	
 	//methods
 	
 	//constructor
@@ -36,6 +47,9 @@ public class Elevator {
 	}
 	
 	//basic functions
+	
+	//positive = up?
+	//negative = down?
 	public void set(double speed){
 		jag1.set(speed);
 		jag2.set(speed);
@@ -72,10 +86,75 @@ public class Elevator {
      *public void UpTwoStop() //we may or may not need this
      *public void DownOneStop() //from top to position two or equivalent distance
      *public void DownTwoStop() //from top to position one or equivalent distance
-     *
-     *
-     * 
      */
+	
+	//go highest possible
+	//assumes you are not higher than upper limit
+	public void goToTop(){
+		this.set(0.5);
+		while(!limitSwitch.get() || encoder.get()<TOP){
+			
+		}
+		this.set(0);
+	}
+	
+	//go lowest possible
+	//ADD LIMIT SWITCH
+	public void goToBottom(){
+		if(encoder.get()>BOTTOM){
+			this.set(-0.5);
+			while(encoder.get()>BOTTOM){
+				
+			}
+		}
+		this.set(0);
+		
+	}
+	
+	//go to position from which to immediately pick up a tote
+	public void goToPickupPosition(){
+		//if above position go down
+		if(encoder.get()>PICKUP_POSITION){
+			this.set(-0.5);
+			//go down until at position
+			while(encoder.get()>PICKUP_POSITION){
+				
+			}
+			this.set(0);
+		}
+		//if below position go up
+		else{
+			this.set(0.25);
+			//go up until at position
+			while(encoder.get()<PICKUP_POSITION){
+				
+			}
+			this.set(0);
+		}
+	}
+	
+	//lift stack high enough so that you can drive into another tote
+	public void goToIntakePosition(){
+		//if above position go down
+		if(encoder.get()>INTAKE_POSITION){
+			this.set(-0.5);
+			//go down until position
+			while(encoder.get()>INTAKE_POSITION){
+				
+			}
+		}
+		//if below position go up
+		else{
+			this.set(0.5);
+			//go up until position
+			while(encoder.get()<INTAKE_POSITION){
+				
+			}
+		}
+		this.set(0);
+	}
+	
+	
 	
 	//   methods/capabilities we need
 	/*

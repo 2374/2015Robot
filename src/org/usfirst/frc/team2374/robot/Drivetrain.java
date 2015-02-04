@@ -1,7 +1,6 @@
 package org.usfirst.frc.team2374.robot;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Talon;
 
 public class Drivetrain {
@@ -13,7 +12,7 @@ public class Drivetrain {
 	
 	static final double AUTO_SPEED_SCALE=0.3;//motor speed per foot
 	
-	Talon l1, l2, r1, r2;//jaguars, pretty normal
+	Talon l1, l2, r1, r2;//talons, pretty normal
 	CalibratedGyro gyro;//sensors
 	Encoder encoder;
 	int state;
@@ -28,7 +27,7 @@ public class Drivetrain {
 		
 		gyro=new CalibratedGyro(0);//more ports :P
 		
-		encoder=new Encoder(1,2);
+		encoder=new Encoder(0,1);
 		
 		targetHeading=0;
 	}
@@ -91,8 +90,8 @@ public class Drivetrain {
 		double turn=(lspeed-rspeed)/2;
 		
 		//scales those values
-		forwards=quadraticScale(forwards);
-		turn=deadbandScale(turn);
+		forwards=deadbandScale(forwards,0.1);
+		turn=deadbandScale(turn,0.1);
 		
 		//turns them back into left/right, sets motors
 		setMotors(forwards+turn,forwards-turn);
@@ -102,10 +101,9 @@ public class Drivetrain {
 		//scales the value quadratically, good for driving
 		return value*Math.abs(value);
 	}
-	double deadbandScale(double value){
+	double deadbandScale(double value, double deadband){
 		//scales the value according to a deadband
 		//Ian thinks this is better for rotation
-		double deadband=0.1;
 		if(value>deadband)return (value-deadband)/(1-deadband);
 		else if(value<-deadband)return (value+deadband)/(1-deadband);
 		else return 0;
@@ -124,10 +122,10 @@ public class Drivetrain {
 			rs2/=Math.abs(rs2);
 		}
 		//set the motors as usual
-		l1.set(-ls2);
-		l2.set(-ls2);
-		r1.set(rs2);
-		r2.set(rs2);
+		l1.set(quadraticScale(ls2));
+		l2.set(quadraticScale(ls2));
+		r1.set(-quadraticScale(rs2));
+		r2.set(-quadraticScale(rs2));
 	}
 	public void resetGyro(){
 		gyro.reset();

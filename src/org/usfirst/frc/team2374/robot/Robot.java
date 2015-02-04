@@ -4,6 +4,7 @@ package org.usfirst.frc.team2374.robot;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends SampleRobot {
     Joystick joystick;
@@ -70,6 +71,10 @@ public class Robot extends SampleRobot {
     				buttonPressed=false;
     			}
     		}
+    		
+    		SmartDashboard.putNumber("Gyro",drivetrain.gyro.getAngle());
+        	SmartDashboard.putNumber("DriveEncoder", drivetrain.encoder.get());
+        	SmartDashboard.putNumber("ElevatorEncoder", elevator.encoder.get());
     		Timer.delay(0.005);
     	}
     }

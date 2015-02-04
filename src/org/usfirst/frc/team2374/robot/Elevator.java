@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2374.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Jaguar;
 
@@ -14,6 +15,10 @@ public class Elevator {
 	int portA = 2;
 	int portB = 3;
 	
+	//limitPorts
+	DigitalInput limitBottom, limitTop;
+	int limitBottomPort = 4;
+	int limitTopPort=5;
 	//motors
 	Jaguar jag1;
 	Jaguar jag2;
@@ -33,10 +38,20 @@ public class Elevator {
 		jag1 = new Jaguar(port1);
 		jag2 = new Jaguar(port2);
 		encoder = new Encoder(portA, portB);
+		limitBottom=new DigitalInput(limitBottomPort);
+		limitTop=new DigitalInput(limitTopPort);
 	}
 	
 	//basic functions
 	public void set(double speed){
+		if(speed>0 && limitBottom.get()){
+			set(0);
+			return;
+		}
+		if(speed<0 && limitTop.get()){
+			set(0);
+			return;
+		}
 		jag1.set(speed);
 		jag2.set(speed);
 	}

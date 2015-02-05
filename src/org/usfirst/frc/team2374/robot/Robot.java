@@ -19,28 +19,27 @@ public class Robot extends SampleRobot {
         drivetrain=new Drivetrain();
         elevator=new Elevator(4,5);
         vision=new VisionProcessor();
-        
+     
     }
     
     public void autonomous(){
-    	
+    	drivetrain.encoder.reset();
+    	drivetrain.gyro.calibrate();
+		commandManager.moveDistance(5, 0.5);//(distance, speed) with distance in feet
+		
+		while(commandManager.hasCommand()){
+			followCommand();
+			Timer.delay(0.005);
+		}
     }
     
+    	
+    }
     public void operatorControl() {
     	
     	while(isOperatorControl() && isEnabled()){
     		if(commandManager.hasCommand()){
-    			Command2374 command=commandManager.getCommand();
-    			if(command.system==CommandManager.SYSTEM_DRIVE){
-    				if(drivetrain.followCommand(command)){
-    					commandManager.removeCommand();
-    				}
-    			}
-    			if(command.system==CommandManager.SYSTEM_ELEVATOR){
-    				if(elevator.followCommand(command)){
-    					commandManager.removeCommand();
-    				}
-    			}
+    			followCommand();
     			if(checkDriverInputs()){
     				elevator.set(0);
     				drivetrain.setMotors(0, 0);
@@ -78,7 +77,19 @@ public class Robot extends SampleRobot {
     		Timer.delay(0.005);
     	}
     }
-    
+    public void followCommand(){
+    	Command2374 command=commandManager.getCommand();
+		if(command.system==CommandManager.SYSTEM_DRIVE){
+			if(drivetrain.followCommand(command)){
+				commandManager.removeCommand();
+			}
+		}
+		if(command.system==CommandManager.SYSTEM_ELEVATOR){
+			if(elevator.followCommand(command)){
+				commandManager.removeCommand();
+			}
+		}
+    }
     public boolean checkDriverInputs(){
     	//a simple routine that cycles through all the joystick's axes and sees if they're zeroed
     	for(int i=0; i<6; ++i){

@@ -56,4 +56,5 @@ public class CommandManager {
 	public static final int TYPE_WAIT=0;
 	public static final int TYPE_MOVE=1;
 	public static final int TYPE_TRACK=2;
+	public static final int TYPE_HYBRID=3;
 }

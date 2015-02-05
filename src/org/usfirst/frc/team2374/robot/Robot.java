@@ -31,16 +31,9 @@ public class Robot extends SampleRobot {
     	while(isOperatorControl() && isEnabled()){
     		if(commandManager.hasCommand()){
     			Command2374 command=commandManager.getCommand();
-    			if(command.system==CommandManager.SYSTEM_DRIVE){
-    				if(drivetrain.followCommand(command)){
-    					commandManager.removeCommand();
-    				}
-    			}
-    			if(command.system==CommandManager.SYSTEM_ELEVATOR){
-    				if(elevator.followCommand(command)){
-    					commandManager.removeCommand();
-    				}
-    			}
+    			
+    			if(followCommand(command))commandManager.removeCommand();
+    			
     			if(checkDriverInputs()){
     				elevator.set(0);
     				drivetrain.setMotors(0, 0);
@@ -75,6 +68,8 @@ public class Robot extends SampleRobot {
     		SmartDashboard.putNumber("Gyro",drivetrain.gyro.getAngle());
         	SmartDashboard.putNumber("DriveEncoder", drivetrain.encoder.get());
         	SmartDashboard.putNumber("ElevatorEncoder", elevator.encoder.get());
+        	SmartDashboard.putBoolean("TopLimit", elevator.limitTop.get());
+        	SmartDashboard.putBoolean("BottomLimit", elevator.limitBottom.get());
     		Timer.delay(0.005);
     	}
     }
@@ -85,6 +80,19 @@ public class Robot extends SampleRobot {
     		if(Math.abs(joystick.getRawAxis(i))>0.2)return true;
     	}
     	return false;
+    }
+    
+    public boolean followCommand(Command2374 command){
+    	if(command.system==CommandManager.SYSTEM_DRIVE){
+			return drivetrain.followCommand(command);
+		}
+    	else if(command.system==CommandManager.SYSTEM_ELEVATOR){
+			return elevator.followCommand(command);
+		}
+    	else if(command.type==CommandManager.TYPE_HYBRID){
+			return followCommand(command.hybrid1) && followCommand(command.hybrid2);
+		}
+		return true;
     }
 
 }

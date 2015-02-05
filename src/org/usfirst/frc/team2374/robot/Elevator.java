@@ -17,8 +17,8 @@ public class Elevator {
 	
 	//limitPorts
 	DigitalInput limitBottom, limitTop;
-	int limitBottomPort = 4;
-	int limitTopPort=5;
+	int limitBottomPort = 5;
+	int limitTopPort=4;
 	//motors
 	Jaguar jag1;
 	Jaguar jag2;
@@ -30,6 +30,7 @@ public class Elevator {
 	
 	//constants
 	public static final double ENCODER_COUNTS_TO_FEET=0.01; //NEEDS TESTING
+	//.01 feet per encoder count
 	public static final double ADJUSTMENT_SCALE=0.1;
 	//methods
 	

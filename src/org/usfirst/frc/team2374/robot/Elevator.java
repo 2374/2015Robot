@@ -4,8 +4,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Jaguar;
 
-
+//Command Manager Type Code: SYSTEM_ELEVATOR = 1
 public class Elevator {
+	//for command manager
+	public static final int SYSTEM_ELEVATOR = 1;
+	
+	//botoom = 5 and top is 4
 	
 	//class variables
 	//jaguar ports
@@ -23,8 +27,10 @@ public class Elevator {
 	Encoder encoder; //encoder
 	
 	//limit switch
-	int switchport = 1; //PLEASE CHANGE TO ACTUAL PORT #
-	DigitalInput limitSwitch = new DigitalInput(switchport);
+	int switchportBOTTOM = 5; 
+	int switchportTOP = 4;
+	DigitalInput limitSwitchTOP = new DigitalInput(switchportTOP);
+	DigitalInput limitSwitchBOTTOM = new DigitalInput(switchportBOTTOM);
 	
 	//Hall effect? in the middle
 	
@@ -91,24 +97,24 @@ public class Elevator {
 	//go highest possible
 	//assumes you are not higher than upper limit
 	public void goToTop(){
-		this.set(0.5);
-		while(!limitSwitch.get() || encoder.get()<TOP){
-			
+		if(encoder.get()<TOP || !limitSwitchTOP.get()){ //should we also check the limit switch?
+			this.set(0.5);
+			while(!limitSwitchTOP.get() || encoder.get()<TOP){
+				//do nothing
+			}
 		}
 		this.set(0);
 	}
 	
 	//go lowest possible
-	//ADD LIMIT SWITCH
 	public void goToBottom(){
-		if(encoder.get()>BOTTOM){
+		if(encoder.get()>BOTTOM || !limitSwitchBOTTOM.get()){ //should we also check the limit switch?
 			this.set(-0.5);
-			while(encoder.get()>BOTTOM){
-				
+			while(!limitSwitchBOTTOM.get() || encoder.get()>BOTTOM){
+				//do nothing
 			}
 		}
-		this.set(0);
-		
+		this.set(0); //stop
 	}
 	
 	//go to position from which to immediately pick up a tote
@@ -152,6 +158,27 @@ public class Elevator {
 			}
 		}
 		this.set(0);
+	}
+	
+	//COMMAND-Based versions of previous automated methods
+	
+	public void goToBottomCOMMAND(){ //PLEASE COMPLETE
+		if(!limitSwitchBOTTOM.get() || encoder.get()>BOTTOM){
+			followCommand(SYSTEM_ELEVATOR, );
+		}
+		//a;lsdkfj
+	}
+	
+	public void goToTopCOMMAND(){
+		//asdf
+	}
+	
+	public void goToPickupPositionCOMMAND(){
+		//asdf
+	}
+	
+	public void goToIntakePositionCOMMAND(){
+		//asdf
 	}
 	
 	

@@ -10,7 +10,7 @@ public class Elevator {
 	public static final int SYSTEM_ELEVATOR = 1;
 	
 	//botoom = 5 and top is 4
-	
+ 	
 	//class variables
 	//jaguar ports
 	//int portr = 0;

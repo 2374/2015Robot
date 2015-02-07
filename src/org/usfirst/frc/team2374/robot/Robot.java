@@ -23,23 +23,21 @@ public class Robot extends SampleRobot {
     }
     
     public void autonomous(){
+   
     	drivetrain.encoder.reset();
     	drivetrain.gyro.calibrate();
 		commandManager.moveDistance(5, 0.5);//(distance, speed) with distance in feet
 		
-		while(commandManager.hasCommand()){
-			followCommand();
-			Timer.delay(0.005);
-		}
+		followAllCommands();
     }
     
     	
-    }
+    
     public void operatorControl() {
     	
     	while(isOperatorControl() && isEnabled()){
     		if(commandManager.hasCommand()){
-    			followCommand();
+    			followNextCommand();
     			if(checkDriverInputs()){
     				elevator.set(0);
     				drivetrain.setMotors(0, 0);
@@ -77,19 +75,35 @@ public class Robot extends SampleRobot {
     		Timer.delay(0.005);
     	}
     }
-    public void followCommand(){
-    	Command2374 command=commandManager.getCommand();
-		if(command.system==CommandManager.SYSTEM_DRIVE){
-			if(drivetrain.followCommand(command)){
-				commandManager.removeCommand();
-			}
-		}
-		if(command.system==CommandManager.SYSTEM_ELEVATOR){
-			if(elevator.followCommand(command)){
-				commandManager.removeCommand();
-			}
+    
+    public void followAllCommands(){
+    	while(commandManager.hasCommand()){
+			followNextCommand();
+			Timer.delay(0.005);
 		}
     }
+    
+    public void followNextCommand(){
+    	Command2374 command=commandManager.getCommand();
+		if(followCommand(command)){
+			commandManager.removeCommand();
+		}
+    }
+    
+    public boolean followCommand(Command2374 command){
+    	if(command.system==CommandManager.SYSTEM_DRIVE){
+			return (drivetrain.followCommand(command));
+		}
+		if(command.system==CommandManager.SYSTEM_ELEVATOR){
+			return (elevator.followCommand(command));
+		}
+		if(command.type==CommandManager.TYPE_HYBRID){
+			return followCommand(command.c1) && followCommand(command.c2);
+		}
+		return true;
+    }
+    
+    
     public boolean checkDriverInputs(){
     	//a simple routine that cycles through all the joystick's axes and sees if they're zeroed
     	for(int i=0; i<6; ++i){

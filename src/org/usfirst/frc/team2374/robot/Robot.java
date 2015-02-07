@@ -34,6 +34,8 @@ public class Robot extends SampleRobot {
     	
     
     public void operatorControl() {
+    	int count=0;
+    	drivetrain.calibrateGyro();
     	
     	while(isOperatorControl() && isEnabled()){
     		if(commandManager.hasCommand()){
@@ -47,18 +49,44 @@ public class Robot extends SampleRobot {
     		}
     		else{
     			commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
+    			if(joystick.getRawButton(6)){
+    				double averageSpeed=(-joystick.getRawAxis(1)-joystick.getRawAxis(5))/2;
+    				drivetrain.preciseTank(averageSpeed, averageSpeed);
+    				
+    			}
+    			else{
+    				drivetrain.preciseTank(-joystick.getRawAxis(1), -joystick.getRawAxis(5));
+    			}
     			
-    			drivetrain.preciseTank(-joystick.getRawAxis(1), -joystick.getRawAxis(5));
     			elevator.set(joystick.getRawAxis(3)-joystick.getRawAxis(2));//Ian's cool controller
     			
+    			//turnToHeading((vision.getCenterX()-160)*fov/320);
+    			
+    			if(count%10==0){
+            		//process the camera input into a vision report
+            		VisionReport v=vision.processCamera();
+            		if(v!=null){
+            			SmartDashboard.putNumber("Horizontal Offset", v.horizontalOffset);
+            			//if(joystick.getRawButton(5)){
+            				//auto-align!
+            			//	drivetrain.alignWithCrate(v);
+            			//}
+            			if(joystick.getRawButton(6) && !commandManager.hasCommand()
+            					&& !checkDriverInputs()){
+            				drivetrain.resetGyro();
+            				commandManager.turnToCrate(v);
+            			}
+            		}
+            	}
+    			
     			//target cycling code
-    			if(joystick.getRawButton(5)){
+    			if(joystick.getRawButton(1)){
     				if(!buttonPressed){
     					buttonPressed=true;
     					vision.changeTargets(true);
     				}
     			}
-    			else if(joystick.getRawButton(6)){
+    			else if(joystick.getRawButton(2)){
     				if(!buttonPressed){
     					buttonPressed=true;
     					vision.changeTargets(false);
@@ -72,6 +100,7 @@ public class Robot extends SampleRobot {
     		SmartDashboard.putNumber("Gyro",drivetrain.gyro.getAngle());
         	SmartDashboard.putNumber("DriveEncoder", drivetrain.encoder.get());
         	SmartDashboard.putNumber("ElevatorEncoder", elevator.encoder.get());
+        	count++;
     		Timer.delay(0.005);
     	}
     }

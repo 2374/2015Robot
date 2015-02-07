@@ -25,6 +25,11 @@ public class CommandManager {
 		commandList.add(new Command2374(SYSTEM_DRIVE,TYPE_MOVE,targetDistance,targetHeading,speed));
 	}
 	
+	public void turnToCrate(VisionReport vision){
+		double fov=20;
+		turnToHeading((vision.getCenterX()-160)*fov/320,0.5);
+	}
+	
 	//to set starting point (as a reference for bearings)
 	//call this method whenever starting new sequence because its how the robot 'knows where it started'
 	public void setReferenceFrame(double distance, double heading){

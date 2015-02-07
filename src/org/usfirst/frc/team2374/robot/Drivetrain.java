@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Talon;
 
 public class Drivetrain {
 	
-	static final double ENCODER_COUNTS_TO_FEET=0.05;//for prototype robot
+	static final double FEET_PER_ENCODER_COUNT=1./340.;//for real robot
 	
 	static final double ANGULAR_ADJUSTMENT_SCALE=0.02;//motor speed per degree
 	static final double ANGULAR_ADJUSTMENT_MAX=0.5;//maximum angle speed
@@ -73,13 +73,13 @@ public class Drivetrain {
 	
 	public double getEncoderFeet(){
 		//returns the distance traveled, in feet
-		return (double)getEncoderAdjusted()*ENCODER_COUNTS_TO_FEET;
+		return (double)getEncoderAdjusted()*FEET_PER_ENCODER_COUNT;
 	}
 	
 	public int getEncoderAdjusted(){
 		//adjusts the encoder's values by the angle of the gyroscope
 		//turning the robot in place changes the encoder's value, making this necessary
-		return encoder.get()+(int)(gyro.getAngle()/6);
+		return encoder.get()+(int)(gyro.getAngle()*5);
 	}
 	
 	public void preciseTank(double lspeed, double rspeed){
@@ -129,5 +129,8 @@ public class Drivetrain {
 	}
 	public void resetGyro(){
 		gyro.reset();
+	}
+	public void calibrateGyro(){
+		gyro.calibrate();
 	}
 }

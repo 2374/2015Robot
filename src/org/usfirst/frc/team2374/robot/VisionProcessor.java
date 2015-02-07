@@ -113,7 +113,7 @@ public class VisionProcessor {
         NIVision.imaqDrawShapeOnImage(frame, frame, new NIVision.Rect(240-(int)y, (int)x, (int)(y-120)*2, (int)w),
         		DrawMode.DRAW_VALUE, ShapeMode.SHAPE_RECT, color);
 
-        CameraServer.getInstance().setImage(binImage);
+        CameraServer.getInstance().setImage(frame);
         if(w==0)return null;
         return v;
         

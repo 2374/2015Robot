@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Talon;
 
 public class Drivetrain {
 	
-	static final double ENCODER_COUNTS_TO_FEET=0.05;//for prototype robot
+	static final double FEET_PER_ENCODER_COUNT=1./340.;//for real robot
 	
 	static final double ANGULAR_ADJUSTMENT_SCALE=0.02;//motor speed per degree
 	static final double ANGULAR_ADJUSTMENT_MAX=0.5;//maximum angle speed
@@ -30,6 +30,28 @@ public class Drivetrain {
 		encoder=new Encoder(0,1);
 		
 		targetHeading=0;
+	}
+	
+	public void moveForwards(double speed){
+		
+		//computes the difference between the target angle/position and the current angle/position
+		double angleDifference=-gyro.getAngle();
+		
+		//these values will eventually be what the motors are set to
+		double turnSpeed=0;
+		//angular adjustment, basic PID algorithm (P only)
+		if(Math.abs(angleDifference)>2){
+			turnSpeed=angleDifference*ANGULAR_ADJUSTMENT_SCALE;
+			
+			//scales for maximum and minimum values
+			if(Math.abs(turnSpeed)>ANGULAR_ADJUSTMENT_MAX)turnSpeed=ANGULAR_ADJUSTMENT_MAX*Math.signum(turnSpeed);
+			//don't want a minimum turn value :(
+			//if(Math.abs(turnSpeed)<0.4)turnSpeed=0.4*Math.signum(turnSpeed);
+		}
+		//same algorithm for position adjustment
+		
+		//are we in position?
+		setMotors(speed+turnSpeed,speed-turnSpeed);
 	}
 	
 	public boolean followCommand(Command2374 command){
@@ -73,13 +95,13 @@ public class Drivetrain {
 	
 	public double getEncoderFeet(){
 		//returns the distance traveled, in feet
-		return (double)getEncoderAdjusted()*ENCODER_COUNTS_TO_FEET;
+		return (double)getEncoderAdjusted()*FEET_PER_ENCODER_COUNT;
 	}
 	
 	public int getEncoderAdjusted(){
 		//adjusts the encoder's values by the angle of the gyroscope
 		//turning the robot in place changes the encoder's value, making this necessary
-		return encoder.get()+(int)(gyro.getAngle()/6);
+		return encoder.get()+(int)(gyro.getAngle()*5);
 	}
 	
 	public void preciseTank(double lspeed, double rspeed){
@@ -95,6 +117,7 @@ public class Drivetrain {
 		
 		//turns them back into left/right, sets motors
 		setMotors(forwards+turn,forwards-turn);
+		
 	}
 	
 	double quadraticScale(double value){
@@ -129,5 +152,8 @@ public class Drivetrain {
 	}
 	public void resetGyro(){
 		gyro.reset();
+	}
+	public void calibrateGyro(){
+		gyro.calibrate();
 	}
 }

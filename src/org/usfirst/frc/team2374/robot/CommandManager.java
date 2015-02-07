@@ -11,7 +11,7 @@ public class CommandManager {
 		commandList=new ArrayList<Command2374>();
 	}
 	
-	public void moveElevator(double targetHeight){
+	public void moveElevator(double targetHeight){ //height from bottom in feet
 		commandList.add(new Command2374(SYSTEM_ELEVATOR,TYPE_MOVE,targetHeight,0,0.5));
 	}
 	
@@ -25,11 +25,19 @@ public class CommandManager {
 		commandList.add(new Command2374(SYSTEM_DRIVE,TYPE_MOVE,targetDistance,targetHeading,speed));
 	}
 	
+	public void turnToCrate(VisionReport vision){
+		double fov=20;
+		turnToHeading((vision.getCenterX()-160)*fov/320,0.5);
+	}
+	
+	//to set starting point (as a reference for bearings)
+	//call this method whenever starting new sequence because its how the robot 'knows where it started'
 	public void setReferenceFrame(double distance, double heading){
 		targetDistance=distance;
 		targetHeading=heading;
 	}
 	
+	//gets first command on list
 	public Command2374 getCommand(){
 		if(hasCommand()){
 			return commandList.get(0);
@@ -41,6 +49,7 @@ public class CommandManager {
 		return commandList.size()>0;
 	}
 	
+	//removes first command in commandList
 	public void removeCommand(){
 		if(hasCommand())commandList.remove(0);
 	}

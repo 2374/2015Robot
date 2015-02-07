@@ -28,9 +28,8 @@ public class Elevator {
 	//limit switch(ES?)
 	//Hall effect? in the middle
 	
-	//constants
-	public static final double ENCODER_COUNTS_TO_FEET=0.01; //NEEDS TESTING
-	//.01 feet per encoder count
+	public static final double FEET_PER_ENCODER_COUNT=2.5/6000;
+	
 	public static final double ADJUSTMENT_SCALE=0.1;
 	//methods
 	
@@ -76,7 +75,7 @@ public class Elevator {
 	}
 	
 	public double getElevatorPosition(){
-		return (double)encoder.get()*ENCODER_COUNTS_TO_FEET;
+		return (double)encoder.get()*FEET_PER_ENCODER_COUNT;
 	}
 	
     /*METHODS FOR AUTOMATION THAT WE SHOULD HAVE

@@ -8,7 +8,7 @@ public class Drivetrain {
 	static final double FEET_PER_ENCODER_COUNT=1./340.;//for real robot
 	
 	static final double ANGULAR_ADJUSTMENT_SCALE=0.02;//motor speed per degree
-	static final double ANGULAR_ADJUSTMENT_MAX=0.5;//maximum angle speed
+	static final double ANGULAR_ADJUSTMENT_MAX=0.4;//maximum angle speed
 	
 	static final double AUTO_SPEED_SCALE=0.3;//motor speed per foot
 	
@@ -27,7 +27,7 @@ public class Drivetrain {
 		
 		gyro=new CalibratedGyro(0);//more ports :P
 		
-		encoder=new Encoder(0,1);
+		encoder=new Encoder(2,3);
 		
 		targetHeading=0;
 	}
@@ -40,7 +40,7 @@ public class Drivetrain {
 		//these values will eventually be what the motors are set to
 		double turnSpeed=0;
 		//angular adjustment, basic PID algorithm (P only)
-		if(Math.abs(angleDifference)>2){
+		if(Math.abs(angleDifference)>2 || true){
 			turnSpeed=angleDifference*ANGULAR_ADJUSTMENT_SCALE;
 			
 			//scales for maximum and minimum values
@@ -51,7 +51,7 @@ public class Drivetrain {
 		//same algorithm for position adjustment
 		
 		//are we in position?
-		setMotors(speed+turnSpeed,speed-turnSpeed);
+		setMotorsQuadratic(speed+turnSpeed,speed-turnSpeed);
 	}
 	
 	public boolean followCommand(Command2374 command){
@@ -70,7 +70,7 @@ public class Drivetrain {
 			//scales for maximum and minimum values
 			if(Math.abs(turnSpeed)>ANGULAR_ADJUSTMENT_MAX)turnSpeed=ANGULAR_ADJUSTMENT_MAX*Math.signum(turnSpeed);
 			//0.4 seems to be enough to overcome the carpet's friction
-			if(Math.abs(turnSpeed)<0.4)turnSpeed=0.4*Math.signum(turnSpeed);
+			if(Math.abs(turnSpeed)<0.2)turnSpeed=0.2*Math.signum(turnSpeed);
 		}
 		//same algorithm for position adjustment
 		if(Math.abs(posDifference)>0.5){
@@ -78,7 +78,7 @@ public class Drivetrain {
 			
 			if(Math.abs(speed)>command.speed)speed=command.speed*Math.signum(speed);
 			//0.3 also seems sufficient
-			if(Math.abs(speed)<0.3)speed=0.3*Math.signum(speed);
+			if(Math.abs(speed)<0.2)speed=0.2*Math.signum(speed);
 		}
 		
 		//are we in position?
@@ -116,7 +116,7 @@ public class Drivetrain {
 		turn=deadbandScale(turn,0.1);
 		
 		//turns them back into left/right, sets motors
-		setMotors(forwards+turn,forwards-turn);
+		setMotorsQuadratic(forwards+turn,forwards-turn);
 		
 	}
 	
@@ -131,8 +131,25 @@ public class Drivetrain {
 		else if(value<-deadband)return (value+deadband)/(1-deadband);
 		else return 0;
 	}
-	
 	public void setMotors(double lspeed, double rspeed){
+		double ls2=lspeed;
+		double rs2=rspeed;
+		//normalize speeds that are too high
+		if(Math.abs(ls2)>1){
+			rs2/=Math.abs(ls2);
+			ls2/=Math.abs(ls2);
+		}
+		if(Math.abs(rs2)>1){
+			ls2/=Math.abs(rs2);
+			rs2/=Math.abs(rs2);
+		}
+		//set the motors as usual
+		l1.set(ls2);
+		l2.set(ls2);
+		r1.set(-rs2);
+		r2.set(-rs2);
+	}
+	public void setMotorsQuadratic(double lspeed, double rspeed){
 		double ls2=lspeed;
 		double rs2=rspeed;
 		//normalize speeds that are too high

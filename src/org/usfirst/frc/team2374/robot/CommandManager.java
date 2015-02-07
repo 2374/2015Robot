@@ -24,11 +24,21 @@ public class CommandManager {
 		targetHeading=heading;
 		commandList.add(new Command2374(SYSTEM_DRIVE,TYPE_MOVE,targetDistance,targetHeading,speed));
 	}
-	
+	public void alignWithCrate(VisionReport vision){
+		turnToHeading(30*Math.signum(vision.horizontalOffset),0.5);
+		
+		//move twice the horizontal offset (since sin(30)=0.5)
+		this.moveDistance(Math.max(Math.abs(vision.horizontalOffset)*2,0.5),0.5);
+		
+		//turn back to the original heading
+		this.turnToHeading(0, 0.5);
+	}
 	public void turnToCrate(VisionReport vision){
 		double fov=20;
 		turnToHeading((vision.getCenterX()-160)*fov/320,0.5);
 	}
+	
+	
 	
 	//to set starting point (as a reference for bearings)
 	//call this method whenever starting new sequence because its how the robot 'knows where it started'

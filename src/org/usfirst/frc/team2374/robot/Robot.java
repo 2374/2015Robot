@@ -25,7 +25,7 @@ public class Robot extends SampleRobot {
     public void autonomous(){
    
     	drivetrain.encoder.reset();
-    	drivetrain.gyro.calibrate();
+    	drivetrain.calibrateGyro();
 		commandManager.moveDistance(5, 0.5);//(distance, speed) with distance in feet
 		
 		followAllCommands();
@@ -42,7 +42,7 @@ public class Robot extends SampleRobot {
     			followNextCommand();
     			if(checkDriverInputs()){
     				elevator.set(0);
-    				drivetrain.setMotors(0, 0);
+    				drivetrain.setMotorsQuadratic(0, 0);
     				commandManager.clearCommands();
     			}
     			
@@ -63,23 +63,24 @@ public class Robot extends SampleRobot {
     			
     			//turnToHeading((vision.getCenterX()-160)*fov/320);
     			
-    			if(count%10==0){
+    			if((joystick.getRawButton(5) || joystick.getRawButton(6)) 
+    					&& !checkDriverInputs() && count%3==0){
             		//process the camera input into a vision report
             		VisionReport v=vision.processCamera();
             		if(v!=null){
             			SmartDashboard.putNumber("Horizontal Offset", v.horizontalOffset);
-            			//if(joystick.getRawButton(5)){
+            			if(joystick.getRawButton(5)){
             				//auto-align!
-            			//	drivetrain.alignWithCrate(v);
-            			//}
-            			if(joystick.getRawButton(6) && !commandManager.hasCommand()
-            					&& !checkDriverInputs()){
+            				drivetrain.resetGyro();
+            				commandManager.alignWithCrate(v);
+            			}
+            			else if(joystick.getRawButton(6)){
             				drivetrain.resetGyro();
             				commandManager.turnToCrate(v);
             			}
             		}
             	}
-    			
+    			vision.debug=joystick.getRawButton(3);
     			//target cycling code
     			if(joystick.getRawButton(1)){
     				if(!buttonPressed){
@@ -103,6 +104,11 @@ public class Robot extends SampleRobot {
         	SmartDashboard.putNumber("ElevatorEncoder", elevator.encoder.get());
         	SmartDashboard.putBoolean("LimitTop", elevator.limitTop.get());
         	SmartDashboard.putBoolean("LimitBottom", elevator.limitBottom.get());
+        	SmartDashboard.putNumber("Commands", commandManager.commandList.size());
+        	
+        	SmartDashboard.putBoolean("YellowTotes", vision.targetCycler==0);
+        	SmartDashboard.putBoolean("GrayTotes", vision.targetCycler==1);
+        	SmartDashboard.putBoolean("GreenBins", vision.targetCycler==2);
         	count++;
     		Timer.delay(0.005);
     	}
@@ -139,7 +145,7 @@ public class Robot extends SampleRobot {
     public boolean checkDriverInputs(){
     	//a simple routine that cycles through all the joystick's axes and sees if they're zeroed
     	for(int i=0; i<6; ++i){
-    		if(Math.abs(joystick.getRawAxis(i))>0.1)return true;
+    		if(Math.abs(joystick.getRawAxis(i))>0.2)return true;
     	}
     	return false;
     }

@@ -12,8 +12,8 @@ public class Elevator {
 	//int portr = 0;
 	//int portl = 0;
 	//encoder ports
-	int portA = 2;
-	int portB = 3;
+	int portA = 0;
+	int portB = 1;
 	
 	//limitPorts
 	DigitalInput limitBottom, limitTop;

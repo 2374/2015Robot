@@ -20,6 +20,7 @@ public class VisionProcessor {
     NIVision.StructuringElement se;
     ColorRange colorRange;
     int targetCycler;
+    boolean debug;
     
     public VisionProcessor() {
     	
@@ -31,6 +32,7 @@ public class VisionProcessor {
         colorRange=ColorRange.YellowToteRange();
         targetCycler=0;
         
+        debug=false;
     }
     
     public void changeTargets(boolean forwards){
@@ -56,9 +58,9 @@ public class VisionProcessor {
         NIVision.Range s = colorRange.saturation;
         NIVision.Range l = colorRange.luminance;
         
-        hue=new NIVision.Range(30,60);
-        s=new NIVision.Range(90,255);
-        l=new NIVision.Range(0, 250);
+        //hue=new NIVision.Range(30,60);
+        //s=new NIVision.Range(90,255);
+        //l=new NIVision.Range(0, 250);
         
         NIVision.Image binImage = NIVision.imaqCreateImage(ImageType.IMAGE_U8, 100);
         
@@ -113,7 +115,7 @@ public class VisionProcessor {
         NIVision.imaqDrawShapeOnImage(frame, frame, new NIVision.Rect(240-(int)y, (int)x, (int)(y-120)*2, (int)w),
         		DrawMode.DRAW_VALUE, ShapeMode.SHAPE_RECT, color);
 
-        CameraServer.getInstance().setImage(frame);
+        CameraServer.getInstance().setImage(debug?binImage:frame);
         if(w==0)return null;
         return v;
         
@@ -136,10 +138,10 @@ class ColorRange{
 	}
 	
 	public static ColorRange GrayToteRange(){
-		return new ColorRange(30,60,90,255,0,250);//this will track YELLOW totes, change pls
+		return new ColorRange(120,160,5,30,20,200);
 	}
 	
 	public static ColorRange RecycleBinRange(){
-		return new ColorRange(30,60,90,255,0,250);//this will track YELLOW totes, change pls
+		return new ColorRange(80,160,40,160,0,160);
 	}
 }

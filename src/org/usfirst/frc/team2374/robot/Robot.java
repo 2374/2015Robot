@@ -65,8 +65,8 @@ public class Robot extends SampleRobot {
 				// target cycling code
 				if (joystick.getRawButton(4)) {
 					drivetrain.setSlowMode(true);
-				}
-				else if (joystick.getRawButton(1)) {
+				}//stop button or moving backward on either axis 
+				else if (joystick.getRawButton(1) || joystick.getRawAxis(1)<0 || joystick.getRawAxis(5)<0) {
 					drivetrain.setSlowMode(false);
 				}
 

@@ -7,8 +7,14 @@ import edu.wpi.first.wpilibj.Jaguar;
 //Command Manager Type Code: SYSTEM_ELEVATOR = 1
 public class Elevator {
 	//for command manager
+	//public Command2374(int system, int type, double distance, double direction, double speed)
 	public static final int SYSTEM_ELEVATOR = 1;
-	
+	public static final int TYPE_WAIT=0;
+	public static final int TYPE_MOVE=1;
+	public static final int TYPE_TRACK=2;
+	public static final double DIRECTION = 0; //just a placeholder for parameters but it's an unused parameter.
+	//DOES DIRECTION MEAN ANGLE (ie drivetrain specific)?
+	public static final double SPEED = 0.5;
 	//botoom = 5 and top is 4
  	
 	//class variables
@@ -159,26 +165,58 @@ public class Elevator {
 		}
 		this.set(0);
 	}
-	
+	//	public Command2374(int system, int type, double distance, double direction, double speed){
+
 	//COMMAND-Based versions of previous automated methods
 	
 	public void goToBottomCOMMAND(){ //PLEASE COMPLETE
 		if(!limitSwitchBOTTOM.get() || encoder.get()>BOTTOM){
-			followCommand(SYSTEM_ELEVATOR, );
+			double distance = encoder.get() - BOTTOM;
+			Command2374 command = new Command2374(SYSTEM_ELEVATOR, TYPE_MOVE, distance, DIRECTION, SPEED);
+			followCommand(command); 
 		}
-		//a;lsdkfj
 	}
 	
 	public void goToTopCOMMAND(){
-		//asdf
+		if(!limitSwitchBOTTOM.get() || encoder.get()> TOP){
+			double distance = TOP - encoder.get();
+			Command2374 command = new Command2374(SYSTEM_ELEVATOR, TYPE_MOVE, distance, DIRECTION, SPEED);
+			followCommand(command);
+		}
 	}
+
 	
 	public void goToPickupPositionCOMMAND(){
-		//asdf
+		if(encoder.get()>PICKUP_POSITION){
+			double distance = encoder.get() - PICKUP_POSITION;
+			Command2374 command = new Command2374(SYSTEM_ELEVATOR, TYPE_MOVE, distance, DIRECTION, SPEED);
+			followCommand(command);
+		}
+		else if(encoder.get()<PICKUP_POSITION){
+			double distance = PICKUP_POSITION - encoder.get();
+			Command2374 command = new Command2374(SYSTEM_ELEVATOR, TYPE_MOVE, distance, DIRECTION, SPEED);
+			followCommand(command);
+		}
+		else{
+			this.set(0);
+		}
 	}
 	
+	
 	public void goToIntakePositionCOMMAND(){
-		//asdf
+		if(encoder.get()>INTAKE_POSITION){
+			double distance = encoder.get() - INTAKE_POSITION;
+			Command2374 command = new Command2374(SYSTEM_ELEVATOR, TYPE_MOVE, distance, DIRECTION, SPEED);
+			followCommand(command);
+		}
+		else if(encoder.get()<INTAKE_POSITION){
+			double distance = INTAKE_POSITION - encoder.get();
+			Command2374 command = new Command2374(SYSTEM_ELEVATOR, TYPE_MOVE, distance, DIRECTION, SPEED);
+			followCommand(command);
+		}
+		else{
+			this.set(0);
+		}
 	}
 	
 	

@@ -12,7 +12,7 @@ public class CommandManager {
 	}
 	
 	public void moveElevator(double targetHeight){
-		commandList.add(new Command2374(SYSTEM_ELEVATOR,TYPE_MOVE,targetHeight,0,0.5));
+		commandList.add(new Command2374(SYSTEM_ELEVATOR,TYPE_MOVE,targetHeight,0,1));
 	}
 	
 	public void moveDistance(double dist, double speed){

@@ -48,10 +48,16 @@ public class Robot extends SampleRobot {
     			
     		}
     		else{
+    			//reset command manager
     			commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
     			
+    			//drivetrain
     			drivetrain.preciseTank(-joystick.getRawAxis(1), -joystick.getRawAxis(5));
-    			elevator.set(joystick.getRawAxis(3)-joystick.getRawAxis(2));//Ian's cool controller
+    			//elevator
+    			elevator.set(joystick.getRawAxis(3)-joystick.getRawAxis(2));//Ian's cool controller; //manual
+    			//preset positions NON-command based
+    			
+    			//preset positions COMMAND-based
     			
     			//target cycling code
     			if(joystick.getRawButton(5)){
@@ -69,6 +75,7 @@ public class Robot extends SampleRobot {
     			else{
     				buttonPressed=false;
     			}
+    			//end target cycling code
     		}
     		Timer.delay(0.005);
     	}

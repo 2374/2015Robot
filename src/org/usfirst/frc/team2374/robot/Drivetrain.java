@@ -124,7 +124,7 @@ public class Drivetrain {
 	double deadbandScale(double value) {
 		// scales the value according to a deadband
 		// Ian thinks this is better for rotation
-		double deadband = 0.1;
+		double deadband = 0.05;
 		if (value > deadband)
 			return (value - deadband) / (1 - deadband);
 		else if (value < -deadband)

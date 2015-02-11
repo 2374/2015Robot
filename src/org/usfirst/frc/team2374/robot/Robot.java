@@ -51,8 +51,9 @@ public class Robot extends SampleRobot {
     		else{
     			commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
     			if(joystick.getPOV()==0)speedMultiplier=1;
-    			if(joystick.getPOV()==90)speedMultiplier=0.5;
-    			if(joystick.getPOV()==180)speedMultiplier=0.25;
+    			if(joystick.getPOV()==90)speedMultiplier=0.45;
+    			if(joystick.getPOV()==180)speedMultiplier=0.75;
+    			//Note: 0.25 = no movement
     			if(joystick.getRawButton(6)){
     				double averageSpeed=(-joystick.getRawAxis(1)-joystick.getRawAxis(5))/2;
     				//drivetrain.preciseTank(averageSpeed, averageSpeed);

@@ -35,6 +35,7 @@ public class Robot extends SampleRobot {
     
     public void operatorControl() {
     	int count=0;
+    	double speedMultiplier=1;
     	drivetrain.calibrateGyro();
     	
     	while(isOperatorControl() && isEnabled()){
@@ -49,17 +50,20 @@ public class Robot extends SampleRobot {
     		}
     		else{
     			commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
+    			if(joystick.getPOV()==0)speedMultiplier=1;
+    			if(joystick.getPOV()==90)speedMultiplier=0.5;
+    			if(joystick.getPOV()==180)speedMultiplier=0.25;
     			if(joystick.getRawButton(6)){
     				double averageSpeed=(-joystick.getRawAxis(1)-joystick.getRawAxis(5))/2;
     				//drivetrain.preciseTank(averageSpeed, averageSpeed);
-    				drivetrain.moveForwards(averageSpeed);
+    				drivetrain.moveForwards(averageSpeed*speedMultiplier);
     				
     			}
     			else{
-    				drivetrain.preciseTank(-joystick.getRawAxis(1), -joystick.getRawAxis(5));
+    				drivetrain.setMotorsQuadratic(-joystick.getRawAxis(1)*speedMultiplier, -joystick.getRawAxis(5)*speedMultiplier);
     			}
     			
-    			elevator.set(joystick.getRawAxis(3)-joystick.getRawAxis(2));//Ian's cool controller
+    			elevator.set(joystick.getRawAxis(2)-joystick.getRawAxis(3));//Ian's cool controller
     			
     			//turnToHeading((vision.getCenterX()-160)*fov/320);
     			
@@ -101,7 +105,7 @@ public class Robot extends SampleRobot {
     		
     		SmartDashboard.putNumber("Gyro",drivetrain.gyro.getAngle());
         	SmartDashboard.putNumber("DriveEncoder", drivetrain.encoder.get());
-        	SmartDashboard.putNumber("ElevatorEncoder", elevator.encoder.get());
+        	SmartDashboard.putNumber("Elevator", elevator.getElevatorPosition());
         	SmartDashboard.putBoolean("LimitTop", elevator.limitTop.get());
         	SmartDashboard.putBoolean("LimitBottom", elevator.limitBottom.get());
         	SmartDashboard.putNumber("Commands", commandManager.commandList.size());
@@ -149,5 +153,4 @@ public class Robot extends SampleRobot {
     	}
     	return false;
     }
-
 }

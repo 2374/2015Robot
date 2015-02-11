@@ -106,14 +106,14 @@ public class Drivetrain {
 	
 	public void preciseTank(double lspeed, double rspeed){
 		//an experimental algorithm to make tank drive as good at going straight/turning in place as arcade drive
-		
+		double deadband=0.05;
 		//converts left/right values into forwards/turn values
 		double forwards=(lspeed+rspeed)/2;
 		double turn=(lspeed-rspeed)/2;
 		
 		//scales those values
-		forwards=deadbandScale(forwards,0.1);
-		turn=deadbandScale(turn,0.1);
+		forwards=deadbandScale(forwards,deadband);
+		turn=deadbandScale(turn,deadband);
 		
 		//turns them back into left/right, sets motors
 		setMotorsQuadratic(forwards+turn,forwards-turn);

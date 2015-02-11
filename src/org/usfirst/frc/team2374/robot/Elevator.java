@@ -31,9 +31,14 @@ public class Elevator {
 	
 	//Preset Positions (in feet from bottom of elevator) PLEASE VERIFY THROUGH TESTING!!!!!!!!!
 	public static final double BOTTOM = 0; //lowest elevator can go
-	public static final double PICKUP_POSITION = 0.5; //position elevator should be to in order to pick up crate by going up
-	public static final double INTAKE_POSITION = 1; //position to which to lift totes in order to drive into another w/out toppling already existing stack
+	public static final double PICKUP_POSITION = 0.75; //position elevator should be to in order to pick up crate by going up
+	public static final double INTAKE_POSITION = 1.75; //position to which to lift totes in order to drive into another w/out toppling already existing stack
 	public static final double TOP = 3; //highest elevator can go
+	/*Notes:
+	 * Totes: 1.5 feet tall
+	 * Range of Motion of Elevator: 3ft
+	 * 
+	 */
 	
 	//METHODS
 	
@@ -50,10 +55,12 @@ public class Elevator {
 	public void set(double speed){
 		if(speed>0 && limitBottom.get()){
 			set(0);
+			encoder.reset(); //to re-calibrate the encoder
 			return;
 		}
 		if(speed<0 && limitTop.get()){
 			set(0);
+			//Question: should we re-calculate ENCODER_COUNTS_PER_FEET here?
 			return;
 		}
 		jag1.set(speed);

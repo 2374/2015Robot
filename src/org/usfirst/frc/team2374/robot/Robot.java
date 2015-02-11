@@ -35,7 +35,7 @@ public class Robot extends SampleRobot {
     
     public void operatorControl() {
     	int count=0;
-    	double speedMultiplier=1;
+    	double speedMultiplier=1; //used to scale down speeds so for fine drivetrain movements
     	drivetrain.calibrateGyro();
     	
     	while(isOperatorControl() && isEnabled()){

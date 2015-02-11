@@ -3,7 +3,6 @@ package org.usfirst.frc.team2374.robot;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Jaguar;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Elevator {

@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2374.robot;
 
 import java.util.ArrayList;
-
+ 
 public class CommandManager {
 	ArrayList<Command2374> commandList; //this will hold all of the current commands for later use
 	double targetDistance,targetHeading;

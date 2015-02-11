@@ -6,7 +6,7 @@ public class Command2374 {
 	public Command2374(int system, int type, double distance, double direction, double speed){
 		this.system=system;
 		this.type=type;
-		this.distance=distance;
+		this.distance=distance; 
 		this.direction=direction;
 		this.speed=speed;
 	}

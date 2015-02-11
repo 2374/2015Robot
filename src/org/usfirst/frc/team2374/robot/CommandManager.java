@@ -12,12 +12,18 @@ public class CommandManager {
 	}
 	
 	public void moveElevator(double targetHeight){ //height from bottom in feet
-		commandList.add(new Command2374(SYSTEM_ELEVATOR,TYPE_MOVE,targetHeight,0,0.5));
+		commandList.add(new Command2374(SYSTEM_ELEVATOR,TYPE_MOVE,targetHeight,0,1));
 	}
 	
 	public void moveDistance(double dist, double speed){
 		targetDistance+=dist;
 		commandList.add(new Command2374(SYSTEM_DRIVE,TYPE_MOVE,targetDistance,targetHeading,speed));
+	}
+	
+	public void moveAndElevate(double dist, double speed, double targetHeight){
+		Command2374 c1=new Command2374(SYSTEM_ELEVATOR,TYPE_MOVE,targetHeight,0,0.5);
+		Command2374 c2=new Command2374(SYSTEM_DRIVE,TYPE_MOVE,targetDistance,targetHeading,speed);
+		commandList.add(new Command2374(c1,c2));
 	}
 	
 	public void turnToHeading(double heading, double speed){

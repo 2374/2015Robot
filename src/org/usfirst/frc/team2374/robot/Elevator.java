@@ -3,6 +3,7 @@ package org.usfirst.frc.team2374.robot;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Jaguar;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Elevator {
@@ -28,9 +29,9 @@ public class Elevator {
 	//limit switch(ES?)
 	//Hall effect? in the middle
 	
-	public static final double FEET_PER_ENCODER_COUNT=2.5/6000;
+	public static final double FEET_PER_ENCODER_COUNT=4/6000;
 	
-	public static final double ADJUSTMENT_SCALE=0.1;
+	public static final double ADJUSTMENT_SCALE=20;
 	//methods
 	
 	//constructor
@@ -45,6 +46,7 @@ public class Elevator {
 	//basic functions
 	public void set(double speed){
 		if(speed>0 && limitBottom.get()){
+			encoder.reset();
 			set(0);
 			return;
 		}
@@ -58,13 +60,16 @@ public class Elevator {
 	
 	public boolean followCommand(Command2374 command){
 		double difference=command.distance-getElevatorPosition();
-		
-		if(Math.abs(difference)>0.3){
+		if(command.distance==0){
+			set(command.speed);
+			return limitBottom.get();
+		}
+		if(Math.abs(difference)>0.2){
 			double speed=difference*ADJUSTMENT_SCALE;//PID
 			//adjust magnitude if the speed is too fast or slow
-			if(Math.abs(speed)<0.1)speed=Math.signum(difference)*0.1;
+			if(Math.abs(speed)<0.5)speed=Math.signum(difference)*0.5;
 			if(Math.abs(speed)>command.speed)speed=Math.signum(difference)*command.speed;
-			set(speed);
+			set(-speed);
 		}
 		else{
 			set(0);

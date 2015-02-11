@@ -8,7 +8,7 @@ public class CommandManager {
 	
 	
 	public CommandManager(){
-		commandList=new ArrayList<Command2374>();
+		commandList=new ArrayList<Command2374>(); 
 	}
 	
 	public void moveElevator(double targetHeight){ //height from bottom in feet

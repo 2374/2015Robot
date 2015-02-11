@@ -7,31 +7,35 @@ import edu.wpi.first.wpilibj.Jaguar;
 
 public class Elevator {
 	
-	//class variables
-	//jaguar ports
-	//int portr = 0;
-	//int portl = 0;
-	//encoder ports
-	int portA = 0;
-	int portB = 1;
+	//CLASS VARIABLES
 	
-	//limitPorts
-	DigitalInput limitBottom, limitTop;
-	int limitBottomPort = 5;
-	int limitTopPort=4;
+	//jaguar ports
 	//motors
 	Jaguar jag1;
 	Jaguar jag2;
+	int portA = 0;
+	int portB = 1;
 	
-	//sensors
-	Encoder encoder; //encoder
-	//limit switch(ES?)
-	//Hall effect? in the middle
+	//limit switches
+	DigitalInput limitBottom, limitTop;
+	int limitBottomPort = 5;
+	int limitTopPort=4;
+	
+	//encoder
+	Encoder encoder; 
+	
 	
 	public static final double FEET_PER_ENCODER_COUNT=2.5/6000;
 	
-	public static final double ADJUSTMENT_SCALE=0.1;
-	//methods
+	public static final double ADJUSTMENT_SCALE=0.1; //for PID
+	
+	//Preset Positions (in feet from bottom of elevator) PLEASE VERIFY THROUGH TESTING!!!!!!!!!
+	public static final double BOTTOM = 0; //lowest elevator can go
+	public static final double PICKUP_POSITION = 0.5; //position elevator should be to in order to pick up crate by going up
+	public static final double INTAKE_POSITION = 1; //position to which to lift totes in order to drive into another w/out toppling already existing stack
+	public static final double TOP = 3; //highest elevator can go
+	
+	//METHODS
 	
 	//constructor
 	public Elevator(int port1, int port2){

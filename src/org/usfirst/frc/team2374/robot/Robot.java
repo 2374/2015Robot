@@ -13,6 +13,8 @@ public class Robot extends SampleRobot {
     Elevator elevator;
     VisionProcessor vision;
     boolean buttonPressed;
+    double distBetweenTotes=4.5; //for autonomous
+    
     public Robot() {
         joystick=new Joystick(0);
         commandManager=new CommandManager();
@@ -119,12 +121,17 @@ public class Robot extends SampleRobot {
     		Timer.delay(0.005);
     	}
     }
+    
+    /*AUTONOMOUS HELP METHODS
+     * Distances
+     * Distance between Totes: 4.5 ft.
+     */
     public void pickUp(){
     	commandManager.moveElevator(0);
-		commandManager.moveElevator(1);
+		commandManager.moveElevator(1.5);
     }
     public void pickUpAndMoveForwards(){
-    	double distBetweenTotes=10;
+    	//double distBetweenTotes=10;
     	commandManager.moveAndElevate(distBetweenTotes/2, 0.5, 0);
     	commandManager.moveAndElevate(distBetweenTotes/2, 0.8, 2);
     	
@@ -135,19 +142,19 @@ public class Robot extends SampleRobot {
 		pickUp();//pick the bin up
 		
 		//move to the tote's position
-		commandManager.moveDistance(-4, 0.5);
+		commandManager.moveDistance(-3, 0.5);
 		commandManager.turnToHeading(30, 0.5);
 		commandManager.moveDistance(-4, 0.5);
 		commandManager.turnToHeading(0,0.5);
-		commandManager.moveDistance(8, 0.5);
+		commandManager.moveDistance(5, 0.5);
 		
 		pickUp();//pick up the tote
 		
 		commandManager.turnToHeading(90, 0.5);//move to the scoring position
-		commandManager.moveDistance(16, 0.8);
+		commandManager.moveDistance(12, 0.8);
 		
 		commandManager.moveElevator(0);//score and retreat
-		commandManager.moveDistance(-4,0.5);
+		commandManager.moveDistance(-2,0.5);
 		
 		followAllCommands();
     }
@@ -157,11 +164,11 @@ public class Robot extends SampleRobot {
 		pickUp();//pick the bin up
 		
 		//move to the tote's position
-		commandManager.moveDistance(-4, 0.5);
+		commandManager.moveDistance(-3, 0.5);
 		commandManager.turnToHeading(30, 0.5);
 		commandManager.moveDistance(-4, 0.5);
 		commandManager.turnToHeading(0,0.5);
-		commandManager.moveDistance(8, 1);
+		commandManager.moveDistance(3, 1);
 		
 		
 		for(int i=0; i<totes-1; ++i){
@@ -170,9 +177,9 @@ public class Robot extends SampleRobot {
 		pickUp();
 		
 		commandManager.turnToHeading(90, 0.5); //move to the scoring position and score
-		commandManager.moveAndElevate(16, 0.8,0);
+		commandManager.moveAndElevate(12, 0.8,0);
 		
-		commandManager.moveDistance(-4,0.5); //retreat
+		commandManager.moveDistance(-2,0.5); //retreat
 		
 		followAllCommands();
     }

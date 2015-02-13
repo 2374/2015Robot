@@ -24,6 +24,7 @@ public class Robot extends SampleRobot {
      
     }
     
+    //Robot can (so will) begin flush with FIRST tote; Hence, do not need to 'drive up' to it
     public void autonomous(){
    
     	drivetrain.encoder.reset();
@@ -54,9 +55,10 @@ public class Robot extends SampleRobot {
     		}
     		else{
     			commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
+    			//0.25 is not enough to overcome friction
     			if(joystick.getPOV()==0)speedMultiplier=1;
-    			if(joystick.getPOV()==90)speedMultiplier=0.5;
-    			if(joystick.getPOV()==180)speedMultiplier=0.25;
+    			if(joystick.getPOV()==90)speedMultiplier=0.75; //from 0.5
+    			if(joystick.getPOV()==180)speedMultiplier=0.45; //from 0.25
     			if(joystick.getRawButton(6)){
     				double averageSpeed=(-joystick.getRawAxis(1)-joystick.getRawAxis(5))/2;
     				//drivetrain.preciseTank(averageSpeed, averageSpeed);
@@ -103,7 +105,7 @@ public class Robot extends SampleRobot {
     				}
     			}
     			else{
-    				buttonPressed=false;
+    				buttonPressed=false; 
     			}
     		}
     		
@@ -136,6 +138,19 @@ public class Robot extends SampleRobot {
     	commandManager.moveAndElevate(distBetweenTotes/2, 0.8, 2);
     	
     }
+    public void oneToteAutonomous(){
+    	//pick up
+    	pickUp();
+    	//move to autonomous zone
+    	commandManager.turnToHeading(90, .5);
+    	commandManager.moveDistance(12, 0.7);
+    	//deliver
+    	commandManager.moveElevator(0);
+    	commandManager.moveDistance(-3, 0.5);
+    	
+    	followAllCommands();
+    }
+    
     public void oneToteOneBinAutonomous(){
     	//this program picks up a bin, moves the robot, picks up a tote, then scores them
     	//
@@ -160,7 +175,7 @@ public class Robot extends SampleRobot {
     }
     public void xTotesOneBinAutonomous(int totes){
     	//this program picks up a bin, moves the robot, picks up a tote, then scores them
-    	//
+    	//QUESTION: robot's starting orientation
 		pickUp();//pick the bin up
 		
 		//move to the tote's position

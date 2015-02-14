@@ -28,7 +28,7 @@ public class Elevator {
 	//limit switch(ES?)
 	//Hall effect? in the middle
 	
-	public static final double FEET_PER_ENCODER_COUNT=4/6000;
+	public static final double FEET_PER_ENCODER_COUNT=4./6000.;
 	
 	public static final double ADJUSTMENT_SCALE=20;
 	//methods

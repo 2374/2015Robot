@@ -7,7 +7,7 @@ public class Drivetrain {
 	
 	static final double FEET_PER_ENCODER_COUNT=1./340.;//for real robot
 	
-	static final double ANGULAR_ADJUSTMENT_SCALE=0.02;//motor speed per degree
+	static final double ANGULAR_ADJUSTMENT_SCALE=0.01;//motor speed per degree
 	static final double ANGULAR_ADJUSTMENT_MAX=0.4;//maximum angle speed
 	
 	static final double AUTO_SPEED_SCALE=0.3;//motor speed per foot
@@ -70,7 +70,7 @@ public class Drivetrain {
 			//scales for maximum and minimum values
 			if(Math.abs(turnSpeed)>ANGULAR_ADJUSTMENT_MAX)turnSpeed=ANGULAR_ADJUSTMENT_MAX*Math.signum(turnSpeed);
 			//0.4 seems to be enough to overcome the carpet's friction
-			if(Math.abs(turnSpeed)<0.2)turnSpeed=0.2*Math.signum(turnSpeed);
+			if(Math.abs(turnSpeed)<0.15)turnSpeed=0.15*Math.signum(turnSpeed);
 		}
 		//same algorithm for position adjustment
 		if(Math.abs(posDifference)>0.5){

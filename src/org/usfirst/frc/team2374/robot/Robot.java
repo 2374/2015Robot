@@ -30,12 +30,7 @@ public class Robot extends SampleRobot {
     	drivetrain.encoder.reset();
     	drivetrain.calibrateGyro();
 		//commandManager.moveDistance(5, 0.5);//(distance, speed) with distance in feet
-    	commandManager.moveElevator(1);
-    	commandManager.moveElevator(0);
-    	commandManager.moveElevator(2);
-    	commandManager.moveElevator(0);
-    	
-    	followAllCommands();
+    	this.oneToteAutonomous();
     }
     
     public void operatorControl() {
@@ -142,7 +137,7 @@ public class Robot extends SampleRobot {
     	//pick up
     	pickUp();
     	//move to autonomous zone
-    	commandManager.turnToHeading(90, .5);
+    	commandManager.turnToHeading(90, .3);
     	commandManager.moveDistance(12, 0.7);
     	//deliver
     	commandManager.moveElevator(0);
@@ -201,9 +196,17 @@ public class Robot extends SampleRobot {
     
     public void followAllCommands(){
     	while(commandManager.hasCommand()&&!checkDriverInputs()){
-    		SmartDashboard.putNumber("Commands", commandManager.commandList.size());
+    		
+    		SmartDashboard.putNumber("Gyro",drivetrain.gyro.getAngle());
+        	SmartDashboard.putNumber("DriveEncoder", drivetrain.encoder.get());
+        	SmartDashboard.putNumber("Elevator", elevator.getElevatorPosition());
+        	SmartDashboard.putBoolean("LimitTop", elevator.limitTop.get());
+        	SmartDashboard.putBoolean("LimitBottom", elevator.limitBottom.get());
+        	SmartDashboard.putNumber("Commands", commandManager.commandList.size());
+        	
 			followNextCommand();
 			Timer.delay(0.005);
+			
 		}
     }
     

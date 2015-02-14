@@ -7,7 +7,7 @@ public class Drivetrain {
 	
 	static final double FEET_PER_ENCODER_COUNT=1./340.;//for real robot
 	
-	static final double ANGULAR_ADJUSTMENT_SCALE=0.01;//motor speed per degree
+	static final double ANGULAR_ADJUSTMENT_SCALE=0.015;//motor speed per degree
 	static final double ANGULAR_ADJUSTMENT_MAX=0.4;//maximum angle speed
 	
 	static final double AUTO_SPEED_SCALE=0.3;//motor speed per foot
@@ -16,6 +16,7 @@ public class Drivetrain {
 	CalibratedGyro gyro;//sensors
 	Encoder encoder;
 	int state;
+	int counter;
 	
 	double targetHeading, targetDistance; //used for automatic movement
 	
@@ -69,8 +70,8 @@ public class Drivetrain {
 			
 			//scales for maximum and minimum values
 			if(Math.abs(turnSpeed)>ANGULAR_ADJUSTMENT_MAX)turnSpeed=ANGULAR_ADJUSTMENT_MAX*Math.signum(turnSpeed);
-			//0.4 seems to be enough to overcome the carpet's friction
-			if(Math.abs(turnSpeed)<0.15)turnSpeed=0.15*Math.signum(turnSpeed);
+			//0.2 seems to be enough to overcome the carpet's friction
+			if(Math.abs(turnSpeed)<0.2)turnSpeed=0.2*Math.signum(turnSpeed);
 		}
 		//same algorithm for position adjustment
 		if(Math.abs(posDifference)>0.5){
@@ -83,10 +84,14 @@ public class Drivetrain {
 		
 		//are we in position?
 		if(Math.abs(angleDifference)<=3 && Math.abs(posDifference)<=0.5){
+			
 			//stop
 			setMotors(0,0);
-			//we followed the command, return confirmation
-			return true;
+			counter++;//the counter's to make sure the robot comes to a stop
+			return counter>15;
+		}
+		else{
+			counter=0;
 		}
 		setMotors(speed+turnSpeed,speed-turnSpeed);
 		

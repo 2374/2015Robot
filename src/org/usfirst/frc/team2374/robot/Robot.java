@@ -32,9 +32,11 @@ public class Robot extends SampleRobot {
     
     //Robot can (so will) begin flush with FIRST tote; Hence, do not need to 'drive up' to it
     public void autonomous(){
-   
+    	
     	drivetrain.encoder.reset();
     	drivetrain.calibrateGyro();
+    	//this is necessary!!!
+    	commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
 		//commandManager.moveDistance(5, 0.5);//(distance, speed) with distance in feet
     	oneToteAutonomous();
     }
@@ -43,7 +45,7 @@ public class Robot extends SampleRobot {
     	int count=0;
     	double speedMultiplier=1;
     	drivetrain.calibrateGyro();
-    	
+    	commandManager.clearCommands();//for safety reasons :P
     	while(isOperatorControl() && isEnabled()){
     		if(commandManager.hasCommand()){
     			followNextCommand();
@@ -67,7 +69,7 @@ public class Robot extends SampleRobot {
     				
     			}
     			else{
-    				drivetrain.setMotorsQuadratic(-joystick.getRawAxis(1)*speedMultiplier, -joystick.getRawAxis(5)*speedMultiplier);
+    				drivetrain.preciseTank(-joystick.getRawAxis(1)*speedMultiplier, -joystick.getRawAxis(5)*speedMultiplier);
     			}
     			
     			elevator.set(joystick.getRawAxis(2)-joystick.getRawAxis(3));//Ian's cool controller
@@ -144,9 +146,10 @@ public class Robot extends SampleRobot {
     	pickUp();
     	//move to autonomous zone
     	commandManager.turnToHeading(90, .5);
-    	commandManager.moveDistance(toAutonomousZone, 0.7);
+    	commandManager.moveDistance(toAutonomousZone-5, 0.7);
+    	
+    	commandManager.moveAndElevate(5, 0.5, 0);
     	//deliver
-    	commandManager.moveElevator(0);
     	commandManager.moveDistance(-4, 0.5);
     	
     	followAllCommands();
@@ -219,11 +222,13 @@ public class Robot extends SampleRobot {
     	if(command.system==CommandManager.SYSTEM_DRIVE){
 			return (drivetrain.followCommand(command));
 		}
-		if(command.system==CommandManager.SYSTEM_ELEVATOR){
+    	else if(command.system==CommandManager.SYSTEM_ELEVATOR){
 			return (elevator.followCommand(command));
 		}
-		if(command.type==CommandManager.TYPE_HYBRID){
-			return followCommand(command.c1) && followCommand(command.c2);
+    	else if(command.type==CommandManager.TYPE_HYBRID){
+			boolean result1=followCommand(command.c1);
+		    boolean result2=followCommand(command.c2);
+			return result1 && result2;
 		}
 		return true;
     }

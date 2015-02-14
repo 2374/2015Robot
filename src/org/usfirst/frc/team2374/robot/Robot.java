@@ -152,7 +152,7 @@ public class Robot extends SampleRobot {
     	commandManager.moveDistance(toAutonomousZone, 0.7);
     	//deliver
     	commandManager.moveElevator(0);
-    	commandManager.moveDistance(-4, 0.5);
+    	commandManager.moveDistance(-2.5, 0.5);
     	
     	followAllCommands();
     }

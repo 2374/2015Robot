@@ -169,10 +169,10 @@ public class Robot extends SampleRobot {
 		pickUp();//pick up the tote
 		
 		commandManager.turnToHeading(90, 0.5);//move to the scoring position
-		commandManager.moveDistance(12, 0.8);
+		commandManager.moveDistance(toAutonomousZone-5, 0.8);
 		
-		commandManager.moveElevator(0);//score and retreat
-		commandManager.moveDistance(-2,0.5);
+		commandManager.moveAndElevate(5,0.8,0);//score and retreat
+		commandManager.moveDistance(-2.5,0.5);
 		
 		followAllCommands();
     }
@@ -195,9 +195,9 @@ public class Robot extends SampleRobot {
 		pickUp();
 		
 		commandManager.turnToHeading(90, 0.5); //move to the scoring position and score
-		commandManager.moveAndElevate(12, 0.8,0);
+		commandManager.moveAndElevate(13.5, 0.8,0);
 		
-		commandManager.moveDistance(-2,0.5); //retreat
+		commandManager.moveDistance(-2.5,0.5); //retreat
 		
 		followAllCommands();
     }

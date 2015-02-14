@@ -7,13 +7,19 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends SampleRobot {
+	//the usual
     Joystick joystick;
     CommandManager commandManager;
     Drivetrain drivetrain;
     Elevator elevator;
     VisionProcessor vision;
     boolean buttonPressed;
-    double distBetweenTotes=4.5; //for autonomous
+    
+    //for autonomous
+    final double distBetweenTotes=2.75; //from front edge of tote 1 to back edge of tote 2
+    final double toteLength = 4;//longer side
+    final double distRobotDrive = 6.75; // distance robot has to drive to get from picking up tote one to picking up tote 2
+    final double toAutonomousZone = 13.5;// distance to middle of the autonomous zone from picking up tote 3
     
     public Robot() {
         joystick=new Joystick(0);
@@ -30,7 +36,7 @@ public class Robot extends SampleRobot {
     	drivetrain.encoder.reset();
     	drivetrain.calibrateGyro();
 		//commandManager.moveDistance(5, 0.5);//(distance, speed) with distance in feet
-    	this.oneToteAutonomous();
+    	oneToteAutonomous();
     }
     
     public void operatorControl() {
@@ -137,11 +143,11 @@ public class Robot extends SampleRobot {
     	//pick up
     	pickUp();
     	//move to autonomous zone
-    	commandManager.turnToHeading(90, .3);
-    	commandManager.moveDistance(12, 0.7);
+    	commandManager.turnToHeading(90, .5);
+    	commandManager.moveDistance(toAutonomousZone, 0.7);
     	//deliver
     	commandManager.moveElevator(0);
-    	commandManager.moveDistance(-3, 0.5);
+    	commandManager.moveDistance(-4, 0.5);
     	
     	followAllCommands();
     }
@@ -196,17 +202,9 @@ public class Robot extends SampleRobot {
     
     public void followAllCommands(){
     	while(commandManager.hasCommand()&&!checkDriverInputs()){
-    		
-    		SmartDashboard.putNumber("Gyro",drivetrain.gyro.getAngle());
-        	SmartDashboard.putNumber("DriveEncoder", drivetrain.encoder.get());
-        	SmartDashboard.putNumber("Elevator", elevator.getElevatorPosition());
-        	SmartDashboard.putBoolean("LimitTop", elevator.limitTop.get());
-        	SmartDashboard.putBoolean("LimitBottom", elevator.limitBottom.get());
-        	SmartDashboard.putNumber("Commands", commandManager.commandList.size());
-        	
+    		SmartDashboard.putNumber("Commands", commandManager.commandList.size());
 			followNextCommand();
 			Timer.delay(0.005);
-			
 		}
     }
     

@@ -17,9 +17,13 @@ public class Robot extends SampleRobot {
     
     //for autonomous
     final double distBetweenTotes=2.75; //from front edge of tote 1 to back edge of tote 2
-    final double toteLength = 4;//longer side
+    final double TOTE_LENGTH = 4;//longer side
     final double distRobotDrive = 6.75; // distance robot has to drive to get from picking up tote one to picking up tote 2
     final double toAutonomousZone = 13.5;// distance to middle of the autonomous zone from picking up tote 3
+    //ending positions for autonomous
+    final double position1 = 0.0;
+    final double position2 = 13.5;
+    final double position3 = 20.25;
     
     public Robot() {
         joystick=new Joystick(0);
@@ -139,6 +143,44 @@ public class Robot extends SampleRobot {
     	//double distBetweenTotes=10;
     	commandManager.moveAndElevate(distBetweenTotes/2, 0.5, 0);
     	commandManager.moveAndElevate(distBetweenTotes/2, 0.8, 2);
+    	
+    }
+    public void noToteAutonomous1(double position, double speed){ //where the robot starts from Starting position one. See autonomous guide
+    	if (position==1)
+    		position=position1;
+    	commandManager.moveDistance(toAutonomousZone, 0.7);
+    	commandManager.turnToHeading(90, 0.5);
+    	commandManager.moveDistance(position, speed);
+    	if (position==2)
+    		position=position2;
+    	commandManager.moveDistance(toAutonomousZone, 0.7);
+    	commandManager.turnToHeading(90, 0.5);
+    	commandManager.moveDistance(position, speed);
+    	if (position==3)
+    		position=position3;
+    	commandManager.moveDistance(toAutonomousZone, 0.7);
+    	commandManager.turnToHeading(90, 0.5);
+    	commandManager.moveDistance(position, speed);
+    	commandManager.turnToHeading(-90, 0.5);
+    	
+    }
+    public void noToteAutonomous2(double position, double speed){ //where the robot starts from Starting position two. See autonomous guide
+    	if (position==1)
+    		position=position1;
+    	commandManager.moveDistance(toAutonomousZone, 0.07);
+    	commandManager.turnToHeading(90,0.5);
+    	commandManager.moveDistance(position -79.355, speed);
+    	if (position==2)
+    		position=position2;
+    	commandManager.moveDistance(toAutonomousZone, 0.07);
+    	commandManager.turnToHeading(90,0.5);
+    	commandManager.moveDistance(position -79.355, speed);
+    	if (position==3)
+    		position=position3;
+    	commandManager.moveDistance(toAutonomousZone, 0.07);
+    	commandManager.turnToHeading(90,0.5);
+    	commandManager.moveDistance(position -79.355, speed);
+    	commandManager.turnToHeading(-90, 0.5);
     	
     }
     public void oneToteAutonomous(){

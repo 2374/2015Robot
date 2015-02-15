@@ -8,29 +8,29 @@ import edu.wpi.first.wpilibj.Jaguar;
 public class Elevator {
 	
 	//class variables
-	//jaguar ports
-	//int portr = 0;
-	//int portl = 0;
-	//encoder ports
-	int portA = 0;
-	int portB = 1;
-	
-	//limitPorts
-	DigitalInput limitBottom, limitTop;
-	int limitBottomPort = 5;
-	int limitTopPort=4;
 	//motors
 	Jaguar jag1;
 	Jaguar jag2;
 	
 	//sensors
-	Encoder encoder; //encoder
-	//limit switch(ES?)
-	//Hall effect? in the middle
-	
+	//limit switches
+	DigitalInput limitBottom, limitTop;
+	int limitBottomPort = 5;
+	int limitTopPort=4;
+	boolean limitOVERRIDE; //to override using limit switches in case they're unresponsive
+	//encoder 
+	Encoder encoder;
+	int portA = 0;
+	int portB = 1;
+	//variables for encoder
 	public static final double FEET_PER_ENCODER_COUNT=4./6000.;
-	
 	public static final double ADJUSTMENT_SCALE=20;
+	//in feet; please verify
+	public static final double TOP = 2.5;
+	public static final double BOTTOM = 0;
+	public static final double PICKUP_POSITION = 0.5;
+	public static final double INTAKE_POSITION = 1.5;
+	
 	//methods
 	
 	//constructor
@@ -40,28 +40,49 @@ public class Elevator {
 		encoder = new Encoder(portA, portB);
 		limitBottom=new DigitalInput(limitBottomPort);
 		limitTop=new DigitalInput(limitTopPort);
+		limitOVERRIDE = false;
 	}
 	
 	//basic functions
 	public void set(double speed){
-		if(speed>0 && limitBottom.get()){
-			encoder.reset();
-			set(0);
-			return;
+		if(limitOVERRIDE==false){
+			if(speed>0 && (limitBottom.get() || this.getElevatorPosition()==BOTTOM)){
+				set(0);
+				encoder.reset();
+				return;
+			}
+			if(speed<0 && (limitTop.get() || this.getElevatorPosition()==TOP)){
+				set(0);
+				return;
+			}
+			jag1.set(speed);
+			jag2.set(speed);
 		}
-		if(speed<0 && limitTop.get()){
-			set(0);
-			return;
+		else{
+			if(speed>0 && this.getElevatorPosition()==BOTTOM){
+				set(0);
+				encoder.reset();
+				return;
+			}
+			if(speed<0 && this.getElevatorPosition()==TOP){
+				set(0);
+				return;
+			}
+			jag1.set(speed);
+			jag2.set(speed);
 		}
-		jag1.set(speed);
-		jag2.set(speed);
 	}
 	
 	public boolean followCommand(Command2374 command){
 		double difference=command.distance-getElevatorPosition();
 		if(command.distance==0){
 			set(command.speed);
-			return limitBottom.get();
+			if(limitOVERRIDE==false){
+				return (limitBottom.get() || this.getElevatorPosition()==BOTTOM);
+			}
+			else{
+				return this.getElevatorPosition()==BOTTOM;
+			}
 		}
 		if(Math.abs(difference)>0.2){
 			double speed=difference*ADJUSTMENT_SCALE;//PID

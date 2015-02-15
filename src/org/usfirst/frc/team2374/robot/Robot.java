@@ -4,6 +4,7 @@ package org.usfirst.frc.team2374.robot;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends SampleRobot {
@@ -20,6 +21,8 @@ public class Robot extends SampleRobot {
     final double toteLength = 4;//longer side
     final double distRobotDrive = 6.75; // distance robot has to drive to get from picking up tote one to picking up tote 2
     final double toAutonomousZone = 13.5;// distance to middle of the autonomous zone from picking up tote 3
+    Command autonomousCommand;
+    
     
     public Robot() {
         joystick=new Joystick(0);
@@ -37,8 +40,16 @@ public class Robot extends SampleRobot {
     	drivetrain.calibrateGyro();
     	//this is necessary!!!
     	commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
+    	if(SmartDashboard.getData("Autonomous").equals(1)){
+    		commandManager.moveDistance(3, 0.5);//(distance, speed) with distance in feet
+    	}
+    	else if(SmartDashboard.getData("Autonomous").equals(2)){
+    		commandManager.turnToHeading(90, 0.5);
+    		//oneToteAutonomous();
+    	}
+    	//if(SmarthDashboard.get)
 		//commandManager.moveDistance(5, 0.5);//(distance, speed) with distance in feet
-    	oneToteAutonomous();
+    	//oneToteAutonomous();
     }
     
     public void operatorControl() {
@@ -56,7 +67,10 @@ public class Robot extends SampleRobot {
     			}
     			
     		}
-    		else{
+    		else{ 
+    			if(joystick.getRawButton(8)){ //override limit switches if needed
+    				elevator.limitOVERRIDE = !elevator.limitOVERRIDE;
+    			}
     			commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
     			//0.25 is not enough to overcome friction
     			if(joystick.getPOV()==0)speedMultiplier=1;
@@ -111,12 +125,17 @@ public class Robot extends SampleRobot {
     				buttonPressed=false; 
     			}
     		}
+    		//SmartDashboard.putData(autonomous);
+    		SmartDashboard.putNumber("Autonomous", 0);
+    		//SmartDashboard.putNumber("AutonomousValue", SmartDashboard.getData("Autonomuos"));
+    		//int autonomousNum = SmartDashboard.getData("Autonomus");
     		
     		SmartDashboard.putNumber("Gyro",drivetrain.gyro.getAngle());
         	SmartDashboard.putNumber("DriveEncoder", drivetrain.encoder.get());
-        	SmartDashboard.putNumber("Elevator", elevator.getElevatorPosition());
+        	SmartDashboard.putNumber("Elevator", elevator.getElevatorPosition()); 
         	SmartDashboard.putBoolean("LimitTop", elevator.limitTop.get());
         	SmartDashboard.putBoolean("LimitBottom", elevator.limitBottom.get());
+        	SmartDashboard.putBoolean("LimitOVERRIDE", elevator.limitOVERRIDE);
         	SmartDashboard.putNumber("Commands", commandManager.commandList.size());
         	
         	SmartDashboard.putBoolean("YellowTotes", vision.targetCycler==0);

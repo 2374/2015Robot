@@ -67,7 +67,7 @@ public class Robot extends SampleRobot {
     			}
     			
     		}
-    		else{ 
+    		else{  
     			if(joystick.getRawButton(8)){ //override limit switches if needed
     				elevator.limitOVERRIDE = !elevator.limitOVERRIDE;
     			}

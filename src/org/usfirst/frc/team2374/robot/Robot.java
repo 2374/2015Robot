@@ -21,9 +21,9 @@ public class Robot extends SampleRobot {
     final double distRobotDrive = 6.75; // distance robot has to drive to get from picking up tote one to picking up tote 2
     final double toAutonomousZone = 13.5;// distance to middle of the autonomous zone from picking up tote 3
     //ending positions for autonomous
-    final double position1 = 0.0;
-    final double position2 = 13.5;
-    final double position3 = 20.25;
+    //final double position1 = 0.0;
+    //final double position2 = 13.5;
+    //final double position3 = 20.25;
     
     public Robot() {
         joystick=new Joystick(0);
@@ -145,24 +145,45 @@ public class Robot extends SampleRobot {
     	commandManager.moveAndElevate(distBetweenTotes/2, 0.8, 2);
     	
     }
-    public void noToteAutonomous1(double position, double speed){ //where the robot starts from Starting position one. See autonomous guide
-    	if (position==1)
-    		position=position1;
-    	commandManager.moveDistance(toAutonomousZone, 0.7);
+    
+    public void noToteAutonomous1(){
+    	commandManager.moveDistance(3.25,0.8);
     	commandManager.turnToHeading(90, 0.5);
-    	commandManager.moveDistance(position, speed);
-    	if (position==2)
-    		position=position2;
-    	commandManager.moveDistance(toAutonomousZone, 0.7);
-    	commandManager.turnToHeading(90, 0.5);
-    	commandManager.moveDistance(position, speed);
-    	if (position==3)
-    		position=position3;
-    	commandManager.moveDistance(toAutonomousZone, 0.7);
-    	commandManager.turnToHeading(90, 0.5);
-    	commandManager.moveDistance(position, speed);
+    	commandManager.moveDistance(15.77, 0.8);
     	commandManager.turnToHeading(-90, 0.5);
+    	commandManager.moveDistance(7.16, 0.8);
+    }
+    /* oh hi chaitanya
+       what I recommend is that instead of using a single position parameter and 3 methods, 
+       you use two position parameters and a single method
+       i.e. noToteAutonomous(double startPosition, double endPosition)
+       
+       -peter
+       */
+    
+    /*public void noToteAutonomous1(double position, double speed){ //where the robot starts from Starting position one. See autonomous guide
+    	if (position==1){
+    		position=position1;
     	
+    	commandManager.moveDistance(toAutonomousZone, 0.7);
+    	commandManager.turnToHeading(90, 0.5);
+    	commandManager.moveDistance(position, speed);
+    	}
+    	if (position==2){
+    		position=position2;
+    	
+    	commandManager.moveDistance(toAutonomousZone, 0.7);
+    	commandManager.turnToHeading(90, 0.5);
+    	commandManager.moveDistance(position, speed);
+    	}
+    	if (position==3){
+    		position=position3;
+  
+    	commandManager.moveDistance(toAutonomousZone, 0.7);
+    	commandManager.turnToHeading(90, 0.5);
+    	commandManager.moveDistance(position, speed); 
+    	commandManager.turnToHeading(-90, 0.5);
+    	}	
     }
     public void noToteAutonomous2(double position, double speed){ //where the robot starts from Starting position two. See autonomous guide
     	if (position==1)
@@ -183,6 +204,7 @@ public class Robot extends SampleRobot {
     	commandManager.turnToHeading(-90, 0.5);
     	
     }
+    */
     public void oneToteAutonomous(){
     	//pick up
     	pickUp();

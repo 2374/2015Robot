@@ -4,10 +4,9 @@ package org.usfirst.frc.team2374.robot;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Robot extends SampleRobot {
+public class Robot extends SampleRobot { 
 	//the usual
     Joystick joystick;
     CommandManager commandManager;
@@ -16,12 +15,13 @@ public class Robot extends SampleRobot {
     VisionProcessor vision;
     boolean buttonPressed;
     
+    
     //for autonomous
     final double distBetweenTotes=2.75; //from front edge of tote 1 to back edge of tote 2
     final double toteLength = 4;//longer side
     final double distRobotDrive = 6.75; // distance robot has to drive to get from picking up tote one to picking up tote 2
     final double toAutonomousZone = 13.5;// distance to middle of the autonomous zone from picking up tote 3
-    Command autonomousCommand;
+    //Command autonomousCommand;
     
     
     public Robot() {
@@ -50,6 +50,7 @@ public class Robot extends SampleRobot {
     	//if(SmarthDashboard.get)
 		//commandManager.moveDistance(5, 0.5);//(distance, speed) with distance in feet
     	//oneToteAutonomous();
+    	followAllCommands();
     }
     
     public void operatorControl() {
@@ -126,13 +127,14 @@ public class Robot extends SampleRobot {
     			}
     		}
     		//SmartDashboard.putData(autonomous);
-    		SmartDashboard.putNumber("Autonomous", 0);
-    		//SmartDashboard.putNumber("AutonomousValue", SmartDashboard.getData("Autonomuos"));
-    		//int autonomousNum = SmartDashboard.getData("Autonomus");
+    		SmartDashboard.putNumber("Autonomous", 0); //0=do NOTHING
+    		//SmartDashboard.putNumber("AutonomousValue", SmartDashboard.getData("Autonomous"));
+    		//int autonomousNum = SmartDashboard.getData("Autonomous");
     		
-    		SmartDashboard.putNumber("Gyro",drivetrain.gyro.getAngle());
+    		SmartDashboard.putNumber("Gyro",drivetrain.gyro.getAngle()); 
         	SmartDashboard.putNumber("DriveEncoder", drivetrain.encoder.get());
-        	SmartDashboard.putNumber("Elevator", elevator.getElevatorPosition()); 
+        	SmartDashboard.putNumber("Elevator", elevator.getElevatorPosition());
+        	SmartDashboard.putNumber("ElevatorPosFt", elevator.getElevatorPosition());
         	SmartDashboard.putBoolean("LimitTop", elevator.limitTop.get());
         	SmartDashboard.putBoolean("LimitBottom", elevator.limitBottom.get());
         	SmartDashboard.putBoolean("LimitOVERRIDE", elevator.limitOVERRIDE);

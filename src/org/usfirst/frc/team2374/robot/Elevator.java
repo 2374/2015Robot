@@ -23,11 +23,13 @@ public class Elevator {
 	int portA = 0;
 	int portB = 1;
 	//variables for encoder
-	public static final double FEET_PER_ENCODER_COUNT=4./6000.;
+	//public static final double FEET_PER_ENCODER_COUNT=4./6000.; //double check
+	public static final double FEET_PER_ENCODER_COUNT = 1.32; //1.32 counts = 1 ft
 	public static final double ADJUSTMENT_SCALE=20;
 	//in feet; please verify
-	public static final double TOP = 2.5;
-	public static final double BOTTOM = 0;
+	//RANGE OF MOTION + 29in = 2ft 5in
+	public static final double TOP = 2; //make LOWER - 2.25?
+	public static final double BOTTOM = 0.25; //from 0; for safety
 	public static final double PICKUP_POSITION = 0.5;
 	public static final double INTAKE_POSITION = 1.5;
 	
@@ -99,8 +101,10 @@ public class Elevator {
 		return false;
 	}
 	
+	//gives elevator position in feet from bottom of elevator
 	public double getElevatorPosition(){
-		return (double)encoder.get()*FEET_PER_ENCODER_COUNT;
+		//return (double)encoder.get()*FEET_PER_ENCODER_COUNT;
+		return (double)encoder.get()/FEET_PER_ENCODER_COUNT;
 	}
 	
     /*METHODS FOR AUTOMATION THAT WE SHOULD HAVE

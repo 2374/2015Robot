@@ -70,8 +70,7 @@ public class Robot extends SampleRobot {
     				double averageSpeed=(-joystick.getRawAxis(1)-joystick.getRawAxis(5))/2;
     				//drivetrain.preciseTank(averageSpeed, averageSpeed);
     				drivetrain.moveForwards(averageSpeed*speedMultiplier);
-    				
-    			}
+    				..averageSpeed..0.   			}
     			else{
     				drivetrain.preciseTank(-joystick.getRawAxis(1)*speedMultiplier, -joystick.getRawAxis(5)*speedMultiplier);
     			}

@@ -23,7 +23,7 @@ public class Elevator {
 	int portA = 0;
 	int portB = 1;
 	//variables for encoder
-	public static final double FEET_PER_ENCODER_COUNT=4./6000.;
+	public static final double FEET_PER_ENCODER_COUNT=-3.5/6000.;
 	public static final double ADJUSTMENT_SCALE=20;
 	//in feet; please verify
 	public static final double TOP = 2.5;
@@ -78,7 +78,7 @@ public class Elevator {
 		if(command.distance==0){
 			set(command.speed);
 			if(limitOVERRIDE==false){
-				return (limitBottom.get() || this.getElevatorPosition()==BOTTOM);
+				return (limitBottom.get());
 			}
 			else{
 				return this.getElevatorPosition()==BOTTOM;

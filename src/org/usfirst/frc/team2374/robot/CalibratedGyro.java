@@ -37,7 +37,7 @@ public class CalibratedGyro {
 	
 	public double getAngle(){
 		//returns an angle value for the gyro, adjusted for drift over time
-		return gyro.getAngle()-offset*(System.currentTimeMillis()-calibrationTime);
+		return (gyro.getAngle()-offset*(System.currentTimeMillis()-calibrationTime));
 	}
 }
 

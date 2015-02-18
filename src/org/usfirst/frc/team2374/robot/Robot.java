@@ -40,13 +40,8 @@ public class Robot extends SampleRobot {
     	drivetrain.calibrateGyro();
     	//this is necessary!!!
     	commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
-    	if(SmartDashboard.getData("Autonomous").equals(1)){
-    		commandManager.moveDistance(3, 0.5);//(distance, speed) with distance in feet
-    	}
-    	else if(SmartDashboard.getData("Autonomous").equals(2)){
-    		commandManager.turnToHeading(90, 0.5);
-    		//oneToteAutonomous();
-    	}
+    	
+    	threeToteAutonomous();
     	//if(SmarthDashboard.get)
 		//commandManager.moveDistance(5, 0.5);//(distance, speed) with distance in feet
     	//oneToteAutonomous();
@@ -132,6 +127,7 @@ public class Robot extends SampleRobot {
     		
     		SmartDashboard.putNumber("Gyro",drivetrain.gyro.getAngle());
         	SmartDashboard.putNumber("DriveEncoder", drivetrain.encoder.get());
+        	SmartDashboard.putNumber("DriveEncoderAdj", drivetrain.getEncoderFeet());
         	SmartDashboard.putNumber("Elevator", elevator.getElevatorPosition()); 
         	SmartDashboard.putBoolean("LimitTop", elevator.limitTop.get());
         	SmartDashboard.putBoolean("LimitBottom", elevator.limitBottom.get());
@@ -150,14 +146,20 @@ public class Robot extends SampleRobot {
      * Distances
      * Distance between Totes: 4.5 ft.
      */
+    public void pickUpBin(){
+    	commandManager.moveElevator(0);
+		commandManager.moveElevator(2.5);
+    }
     public void pickUp(){
     	commandManager.moveElevator(0);
 		commandManager.moveElevator(1.5);
     }
     public void pickUpAndMoveForwards(){
     	//double distBetweenTotes=10;
-    	commandManager.moveAndElevate(distBetweenTotes/2, 0.5, 0);
-    	commandManager.moveAndElevate(distBetweenTotes/2, 0.8, 2);
+    	commandManager.moveAndElevate(distRobotDrive/2, 0.7, 0);
+    	//commandManager.moveAndElevate(distRobotDrive/2, 0.8, 1.5);
+    	commandManager.moveElevator(1.5);
+    	commandManager.moveDistance(distRobotDrive/2,1);
     	
     }
     public void oneToteAutonomous(){
@@ -176,22 +178,23 @@ public class Robot extends SampleRobot {
     public void oneToteOneBinAutonomous(){
     	//this program picks up a bin, moves the robot, picks up a tote, then scores them
     	//
-		pickUp();//pick the bin up
+		pickUpBin();//pick the bin up
 		
 		//move to the tote's position
-		commandManager.moveDistance(-3, 0.5);
+		commandManager.moveDistance(-3, 0.7);
 		commandManager.turnToHeading(30, 0.5);
-		commandManager.moveDistance(-4, 0.5);
+		commandManager.moveDistance(-4, 0.7);
 		commandManager.turnToHeading(0,0.5);
-		commandManager.moveDistance(5, 0.5);
+		commandManager.moveDistance(3, 0.7);
+		commandManager.moveDistance(2, 0.3);
 		
 		pickUp();//pick up the tote
 		
-		commandManager.turnToHeading(90, 0.5);//move to the scoring position
-		commandManager.moveDistance(12, 0.8);
+		//commandManager.turnToHeading(90, 0.5);//move to the scoring position
+		//commandManager.moveDistance(12, 0.8);
 		
-		commandManager.moveElevator(0);//score and retreat
-		commandManager.moveDistance(-2,0.5);
+		//commandManager.moveElevator(0);//score and retreat
+		//commandManager.moveDistance(-2,0.5);
 		
 		followAllCommands();
     }
@@ -220,13 +223,40 @@ public class Robot extends SampleRobot {
 		
 		followAllCommands();
     }
-    
+    public void threeToteAutonomous(){
+    	//this program picks up a bin, moves the robot, picks up a tote, then scores them
+    	//QUESTION: robot's starting orientation
+		commandManager.moveElevator(0);//pick the first tote up
+		
+		//move around the bin
+		commandManager.turnToHeading(-30, 0.5);
+		commandManager.moveAndElevate(3, 1, .75);
+		commandManager.turnToHeading(30,0.5);
+		commandManager.moveAndElevate(3, 1, 1.5);
+		commandManager.turnToHeading(0, 0.5);
+		commandManager.moveDistance(3, 1);
+		
+		pickUpAndMoveForwards();//pick up the 2nd tote
+		//pickUp();
+		commandManager.moveElevator(0);
+		/*
+		commandManager.turnToHeading(90, 0.5); //move to the scoring position and score
+		commandManager.moveAndElevate(12, 0.8,0);
+		
+		commandManager.moveDistance(-2,0.5); //retreat
+		*/
+		
+		followAllCommands();
+    }
     public void followAllCommands(){
+    	long t=System.currentTimeMillis();
     	while(commandManager.hasCommand()&&!checkDriverInputs()){
     		SmartDashboard.putNumber("Commands", commandManager.commandList.size());
 			followNextCommand();
 			Timer.delay(0.005);
+			SmartDashboard.putNumber("Timer",(double)(System.currentTimeMillis()-t)/1000.);
 		}
+    	
     }
     
     public void followNextCommand(){

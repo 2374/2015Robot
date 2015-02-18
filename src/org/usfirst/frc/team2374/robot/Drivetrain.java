@@ -8,7 +8,7 @@ public class Drivetrain {
 	static final double FEET_PER_ENCODER_COUNT=1./340.;//for real robot
 	
 	static final double ANGULAR_ADJUSTMENT_SCALE=0.015;//motor speed per degree
-	static final double ANGULAR_ADJUSTMENT_MAX=0.4;//maximum angle speed
+	static final double ANGULAR_ADJUSTMENT_MAX=0.7;//maximum angle speed
 	
 	static final double AUTO_SPEED_SCALE=0.3;//motor speed per foot
 	
@@ -106,7 +106,7 @@ public class Drivetrain {
 	public int getEncoderAdjusted(){
 		//adjusts the encoder's values by the angle of the gyroscope
 		//turning the robot in place changes the encoder's value, making this necessary
-		return encoder.get()+(int)(gyro.getAngle()*5);
+		return -encoder.get()-(int)(gyro.getAngle()*5);
 	}
 	
 	public void preciseTank(double lspeed, double rspeed){

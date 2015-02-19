@@ -34,8 +34,12 @@ public class Robot extends SampleRobot {
         vision=new VisionProcessor();
         sc=new SendableChooser();
         
+        
         sc.addDefault("No Autonomous", new AutoCommand(AutoCommand.MODE_NO_AUTONOMOUS));
     	sc.addObject("Triple Tote Autonomous", new AutoCommand(AutoCommand.MODE_THREE_TOTE_AUTONOMOUS));
+    	
+    	SmartDashboard.putData("Select an Autonomous Mode",sc);
+    	
     }
     
     //Robot can (so will) begin flush with FIRST tote; Hence, do not need to 'drive up' to it

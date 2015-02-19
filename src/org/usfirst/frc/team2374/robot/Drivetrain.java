@@ -9,8 +9,11 @@ public class Drivetrain {
 	
 	static final double ANGULAR_ADJUSTMENT_SCALE=0.015;//motor speed per degree
 	static final double ANGULAR_ADJUSTMENT_MAX=0.7;//maximum angle speed
-	
+	static final double ANGULAR_ADJUSTMENT_DERIVATIVE=-0.1;//to slow down rotation to a reasonable amount
+	//the above variable MUST be negative!!!
 	static final double AUTO_SPEED_SCALE=0.3;//motor speed per foot
+	
+	double prevAngle;
 	
 	Talon l1, l2, r1, r2;//talons, pretty normal
 	CalibratedGyro gyro;//sensors
@@ -59,6 +62,8 @@ public class Drivetrain {
 		
 		//computes the difference between the target angle/position and the current angle/position
 		double angleDifference=command.direction-gyro.getAngle();
+		double deltaAngle=gyro.getAngle()-prevAngle;
+		prevAngle=gyro.getAngle();
 		double posDifference=command.distance-getEncoderFeet();
 		
 		//these values will eventually be what the motors are set to
@@ -68,10 +73,13 @@ public class Drivetrain {
 		if(Math.abs(angleDifference)>3){
 			turnSpeed=angleDifference*ANGULAR_ADJUSTMENT_SCALE;
 			
-			//scales for maximum and minimum values
-			if(Math.abs(turnSpeed)>ANGULAR_ADJUSTMENT_MAX)turnSpeed=ANGULAR_ADJUSTMENT_MAX*Math.signum(turnSpeed);
 			//0.2 seems to be enough to overcome the carpet's friction
 			if(Math.abs(turnSpeed)<0.2)turnSpeed=0.2*Math.signum(turnSpeed);
+			
+			turnSpeed+=ANGULAR_ADJUSTMENT_DERIVATIVE*deltaAngle;
+			
+			//scales for maximum values
+			if(Math.abs(turnSpeed)>ANGULAR_ADJUSTMENT_MAX)turnSpeed=ANGULAR_ADJUSTMENT_MAX*Math.signum(turnSpeed);
 		}
 		//same algorithm for position adjustment
 		if(Math.abs(posDifference)>0.5){
@@ -87,8 +95,8 @@ public class Drivetrain {
 			
 			//stop
 			setMotors(0,0);
-			counter++;//the counter's to make sure the robot comes to a stop
-			return counter>15;
+			counter++;//the counter's to make sure the robot comes to a full stop
+			return counter>10;
 		}
 		else{
 			counter=0;
@@ -174,6 +182,7 @@ public class Drivetrain {
 	}
 	public void resetGyro(){
 		gyro.reset();
+		prevAngle=0;
 	}
 	public void calibrateGyro(){
 		gyro.calibrate();

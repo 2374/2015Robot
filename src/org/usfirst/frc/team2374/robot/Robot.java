@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends SampleRobot {
@@ -15,6 +16,7 @@ public class Robot extends SampleRobot {
     Elevator elevator;
     VisionProcessor vision;
     boolean buttonPressed;
+    SendableChooser sc;
     
     //for autonomous
     final double distBetweenTotes=2.75; //from front edge of tote 1 to back edge of tote 2
@@ -30,18 +32,25 @@ public class Robot extends SampleRobot {
         drivetrain=new Drivetrain();
         elevator=new Elevator(4,5);
         vision=new VisionProcessor();
-     
+        sc=new SendableChooser();
+        
+        sc.addDefault("No Autonomous", new AutoCommand(AutoCommand.MODE_NO_AUTONOMOUS));
+    	sc.addObject("Triple Tote Autonomous", new AutoCommand(AutoCommand.MODE_THREE_TOTE_AUTONOMOUS));
     }
     
     //Robot can (so will) begin flush with FIRST tote; Hence, do not need to 'drive up' to it
     public void autonomous(){
+    	
+    	AutoCommand ac=(AutoCommand)sc.getSelected();
     	
     	drivetrain.encoder.reset();
     	drivetrain.calibrateGyro();
     	//this is necessary!!!
     	commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
     	
-    	threeToteAutonomous();
+    	if(ac.mode==AutoCommand.MODE_THREE_TOTE_AUTONOMOUS){
+    		threeToteAutonomous();
+    	}
     	//if(SmarthDashboard.get)
 		//commandManager.moveDistance(5, 0.5);//(distance, speed) with distance in feet
     	//oneToteAutonomous();
@@ -64,7 +73,7 @@ public class Robot extends SampleRobot {
     		}
     		else{ 
     			if(joystick.getRawButton(8)){ //override limit switches if needed
-    				elevator.limitOVERRIDE = !elevator.limitOVERRIDE;
+    				elevator.limitOVERRIDE = true;
     			}
     			commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
     			//0.25 is not enough to overcome friction

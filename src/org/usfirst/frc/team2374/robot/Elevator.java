@@ -18,6 +18,9 @@ public class Elevator {
 	int limitBottomPort = 5;
 	int limitTopPort=4;
 	boolean limitOVERRIDE; //to override using limit switches in case they're unresponsive
+	//hall effect
+	DigitalInput hallBottom;
+	int hallPort = 6;
 	//encoder 
 	Encoder encoder;
 	int portA = 0;
@@ -38,6 +41,7 @@ public class Elevator {
 		jag1 = new Jaguar(port1);
 		jag2 = new Jaguar(port2);
 		encoder = new Encoder(portA, portB);
+		hallBottom = new DigitalInput(hallPort);
 		limitBottom=new DigitalInput(limitBottomPort);
 		limitTop=new DigitalInput(limitTopPort);
 		limitOVERRIDE = false;
@@ -46,7 +50,7 @@ public class Elevator {
 	//basic functions
 	public void set(double speed){
 		if(limitOVERRIDE==false){
-			if(speed>0 && (limitBottom.get() || this.getElevatorPosition()==BOTTOM)){
+			if(speed>0 && (hallBottom.get() || this.getElevatorPosition()==BOTTOM)){
 				set(0);
 				encoder.reset();
 				return;
@@ -78,7 +82,7 @@ public class Elevator {
 		if(command.distance==0){
 			set(command.speed);
 			if(limitOVERRIDE==false){
-				return (limitBottom.get());
+				return (hallBottom.get());
 			}
 			else{
 				return this.getElevatorPosition()==BOTTOM;

@@ -36,7 +36,11 @@ public class Robot extends SampleRobot {
         
         
         sc.addDefault("No Autonomous", new AutoCommand(AutoCommand.MODE_NO_AUTONOMOUS));
+        sc.addObject("Single Tote Autonomous", new AutoCommand(AutoCommand.MODE_ONE_TOTE_AUTONOMOUS));
+        sc.addObject("Double Tote Autonomous", new AutoCommand(AutoCommand.MODE_TWO_TOTE_AUTONOMOUS));
     	sc.addObject("Triple Tote Autonomous", new AutoCommand(AutoCommand.MODE_THREE_TOTE_AUTONOMOUS));
+    	sc.addObject("Move Forwards Autonomous", new AutoCommand(AutoCommand.MODE_FORWARDS_AUTONOMOUS));
+    	sc.addObject("TOTE and BIN Autonomous", new AutoCommand(AutoCommand.MODE_ONE_TOTE_ONE_BIN_AUTONOMOUS));
     	
     	SmartDashboard.putData("Select an Autonomous Mode",sc);
     	

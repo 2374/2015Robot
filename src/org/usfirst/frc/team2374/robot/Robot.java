@@ -59,6 +59,9 @@ public class Robot extends SampleRobot {
     	if(ac.mode==AutoCommand.MODE_THREE_TOTE_AUTONOMOUS){
     		threeToteAutonomous();
     	}
+    	if(ac.mode==AutoCommand.MODE_ONE_TOTE_ONE_BIN_AUTONOMOUS){
+    		oneToteOneBinAutonomous();
+    	}
     	//if(SmarthDashboard.get)
 		//commandManager.moveDistance(5, 0.5);//(distance, speed) with distance in feet
     	//oneToteAutonomous();
@@ -137,8 +140,6 @@ public class Robot extends SampleRobot {
     				buttonPressed=false; 
     			}
     		}
-    		//SmartDashboard.putData(autonomous);
-    		SmartDashboard.putNumber("Autonomous", 0);
     		//SmartDashboard.putNumber("AutonomousValue", SmartDashboard.getData("Autonomuos"));
     		//int autonomousNum = SmartDashboard.getData("Autonomus");
     		
@@ -193,24 +194,13 @@ public class Robot extends SampleRobot {
     }
     
     public void oneToteOneBinAutonomous(){
-    	//this program picks up a bin, moves the robot, picks up a tote, then scores them
-    	//
-		pickUpBin();//pick the bin up
+    	pickUp();
 		
-		//move to the tote's position
-		commandManager.moveDistance(-3, 0.7);
-		commandManager.turnToHeading(30, 0.5);
-		commandManager.moveDistance(-4, 0.7);
-		commandManager.turnToHeading(0,0.5);
-		commandManager.moveDistance(3, 0.7);
-		commandManager.moveDistance(2, 0.3);
-		
-		pickUp();//pick up the tote
-		
-		//commandManager.turnToHeading(90, 0.5);//move to the scoring position
-		//commandManager.moveDistance(12, 0.8);
-		
-		//commandManager.moveElevator(0);//score and retreat
+		//move to push the bin
+		commandManager.turnToHeading(-45, 0.5);
+		commandManager.moveDistance(8.5, 0.5);//8.5 feet is empirical
+		commandManager.turnToHeading(-90,0.5);
+		commandManager.moveDistance(-16, 0.5);
 		//commandManager.moveDistance(-2,0.5);
 		
 		followAllCommands();
@@ -256,8 +246,9 @@ public class Robot extends SampleRobot {
 		pickUpAndMoveForwards();//pick up the 2nd tote
 		//pickUp();
 		commandManager.moveElevator(0);
-		/*
+		
 		commandManager.turnToHeading(90, 0.5); //move to the scoring position and score
+		/*
 		commandManager.moveAndElevate(12, 0.8,0);
 		
 		commandManager.moveDistance(-2,0.5); //retreat

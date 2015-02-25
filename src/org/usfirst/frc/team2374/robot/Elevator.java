@@ -46,12 +46,12 @@ public class Elevator {
 	//basic functions
 	public void set(double speed){
 		if(limitOVERRIDE==false){
-			if(speed>0 && (limitBottom.get() || this.getElevatorPosition()==BOTTOM)){
+			if(speed>0 && limitBottom.get()){
 				set(0);
 				encoder.reset();
 				return;
 			}
-			if(speed<0 && (limitTop.get() || this.getElevatorPosition()==TOP)){
+			if(speed<0 && limitTop.get()){
 				set(0);
 				return;
 			}
@@ -59,12 +59,12 @@ public class Elevator {
 			jag2.set(speed);
 		}
 		else{
-			if(speed>0 && this.getElevatorPosition()==BOTTOM){
+			if(speed>0 && this.getElevatorPosition()<BOTTOM){
 				set(0);
 				encoder.reset();
 				return;
 			}
-			if(speed<0 && this.getElevatorPosition()==TOP){
+			if(speed<0 && this.getElevatorPosition()>TOP){
 				set(0);
 				return;
 			}

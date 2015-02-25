@@ -9,7 +9,7 @@ public class Drivetrain {
 	
 	static final double ANGULAR_ADJUSTMENT_SCALE=0.015;//motor speed per degree
 	static final double ANGULAR_ADJUSTMENT_MAX=0.7;//maximum angle speed
-	static final double ANGULAR_ADJUSTMENT_DERIVATIVE=-0.1;//to slow down rotation to a reasonable amount
+	static final double ANGULAR_ADJUSTMENT_DERIVATIVE=-0.25;//to slow down rotation to a reasonable amount
 	//the above variable MUST be negative!!!
 	static final double AUTO_SPEED_SCALE=0.3;//motor speed per foot
 	
@@ -96,7 +96,7 @@ public class Drivetrain {
 			//stop
 			setMotors(0,0);
 			counter++;//the counter's to make sure the robot comes to a full stop
-			return counter>10;
+			return counter>1;
 		}
 		else{
 			counter=0;

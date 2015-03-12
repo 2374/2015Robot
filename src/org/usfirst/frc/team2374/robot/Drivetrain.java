@@ -114,7 +114,8 @@ public class Drivetrain {
 	public int getEncoderAdjusted(){
 		//adjusts the encoder's values by the angle of the gyroscope
 		//turning the robot in place changes the encoder's value, making this necessary
-		return -encoder.get()-(int)(gyro.getAngle()*5);
+		//return -encoder.get()-(int)(gyro.getAngle()*5);
+		return encoder.get()-(int)(gyro.getAngle()*5); //CHECK SIGNS PLEASE
 	}
 	
 	public void preciseTank(double lspeed, double rspeed){

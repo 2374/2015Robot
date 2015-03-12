@@ -7,9 +7,9 @@ public class Drivetrain {
 	
 	static final double FEET_PER_ENCODER_COUNT=1./340.;//for real robot
 	
-	static final double ANGULAR_ADJUSTMENT_SCALE=0.015;//motor speed per degree
+	static final double ANGULAR_ADJUSTMENT_SCALE=0.025;//motor speed per degree
 	static final double ANGULAR_ADJUSTMENT_MAX=0.7;//maximum angle speed
-	static final double ANGULAR_ADJUSTMENT_DERIVATIVE=-0.25;//to slow down rotation to a reasonable amount
+	static final double ANGULAR_ADJUSTMENT_DERIVATIVE=-0.3;//to slow down rotation to a reasonable amount
 	//the above variable MUST be negative!!!
 	static final double AUTO_SPEED_SCALE=0.3;//motor speed per foot
 	
@@ -82,7 +82,7 @@ public class Drivetrain {
 			if(Math.abs(turnSpeed)>ANGULAR_ADJUSTMENT_MAX)turnSpeed=ANGULAR_ADJUSTMENT_MAX*Math.signum(turnSpeed);
 		}
 		//same algorithm for position adjustment
-		if(Math.abs(posDifference)>0.5){
+		if(Math.abs(posDifference)>0.2){
 			speed=posDifference*AUTO_SPEED_SCALE;
 			
 			if(Math.abs(speed)>command.speed)speed=command.speed*Math.signum(speed);
@@ -91,7 +91,7 @@ public class Drivetrain {
 		}
 		
 		//are we in position?
-		if(Math.abs(angleDifference)<=3 && Math.abs(posDifference)<=0.5){
+		if(Math.abs(angleDifference)<=3 && Math.abs(posDifference)<=0.2){
 			
 			//stop
 			setMotors(0,0);

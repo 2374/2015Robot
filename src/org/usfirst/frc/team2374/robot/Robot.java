@@ -62,6 +62,10 @@ public class Robot extends SampleRobot {
     	if(ac.mode==AutoCommand.MODE_ONE_TOTE_ONE_BIN_AUTONOMOUS){
     		oneToteOneBinAutonomous();
     	}
+    	if(ac.mode==AutoCommand.MODE_FORWARDS_AUTONOMOUS){
+    		this.scoreTotes();
+    		this.followAllCommands();
+    	}
     	//if(SmarthDashboard.get)
 		//commandManager.moveDistance(5, 0.5);//(distance, speed) with distance in feet
     	//oneToteAutonomous();
@@ -177,8 +181,13 @@ public class Robot extends SampleRobot {
     	commandManager.moveAndElevate(distRobotDrive/2, 0.7, 0);
     	//commandManager.moveAndElevate(distRobotDrive/2, 0.8, 1.5);
     	commandManager.moveElevator(1.5);
-    	commandManager.moveDistance(distRobotDrive/2,1);
+    	commandManager.moveDistance(distRobotDrive/2,0.5);
     	
+    }
+    public void scoreTotes(){
+    	commandManager.moveAndElevate(9, 1,0);
+		
+		commandManager.moveDistance(-4,1);
     }
     public void oneToteAutonomous(){
     	//pick up
@@ -230,9 +239,8 @@ public class Robot extends SampleRobot {
 		
 		followAllCommands();
     }
-    public void threeToteAutonomous(){
-    	//this program picks up a bin, moves the robot, picks up a tote, then scores them
-    	//QUESTION: robot's starting orientation
+    public void twoToteAutonomous(){
+    	
 		commandManager.moveElevator(0);//pick the first tote up
 		
 		//move around the bin
@@ -243,9 +251,8 @@ public class Robot extends SampleRobot {
 		commandManager.turnToHeading(0, 0.5);
 		commandManager.moveDistance(3, 1);
 		
-		pickUpAndMoveForwards();//pick up the 2nd tote
+		pickUp();//pick up the 2nd tote
 		//pickUp();
-		commandManager.moveElevator(0);
 		
 		commandManager.turnToHeading(90, 0.5); //move to the scoring position and score
 		/*
@@ -256,12 +263,34 @@ public class Robot extends SampleRobot {
 		
 		followAllCommands();
     }
+    public void threeToteAutonomous(){
+    	//this program picks up a bin, moves the robot, picks up a tote, then scores them
+    	//QUESTION: robot's starting orientation
+		commandManager.moveElevator(0);//pick the first tote up
+		
+		//move around the bin
+		commandManager.turnToHeading(-30, 0.5);
+		commandManager.moveAndElevate(3, 0.8, .75);
+		commandManager.turnToHeading(30,0.5);
+		commandManager.moveAndElevate(3, 0.8, 1.5);
+		commandManager.turnToHeading(0, 0.5);
+		commandManager.moveDistance(3, 0.5);
+		
+		pickUpAndMoveForwards();//pick up the 2nd tote
+		//pickUp();
+		commandManager.moveElevator(0);
+		
+		commandManager.turnToHeading(90, 0.5); //move to the scoring position and score
+		//scoreTotes();
+		
+		followAllCommands();
+    }
     public void followAllCommands(){
     	long t=System.currentTimeMillis();
     	while(commandManager.hasCommand()&&!checkDriverInputs()){
     		SmartDashboard.putNumber("Commands", commandManager.commandList.size());
 			followNextCommand();
-			Timer.delay(0.005);
+			Timer.delay(0.01);
 			SmartDashboard.putNumber("Timer",(double)(System.currentTimeMillis()-t)/1000.);
 		}
     	

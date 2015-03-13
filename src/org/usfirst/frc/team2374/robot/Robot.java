@@ -16,15 +16,15 @@ public class Robot extends SampleRobot {
     Elevator elevator;
     VisionProcessor vision;
     boolean buttonPressed;
-    SendableChooser sc;
-    
+    SendableChooser modeChooser;
+    SendableChooser angleChooser;
     //for autonomous
     final double distBetweenTotes=2.75; //from front edge of tote 1 to back edge of tote 2
     final double toteLength = 4;//longer side
     final double distRobotDrive = 6.75; // distance robot has to drive to get from picking up tote one to picking up tote 2
     final double toAutonomousZone = 13.5;// distance to middle of the autonomous zone from picking up tote 3
     Command autonomousCommand;
-    final double angleOffset=5;
+    double angleOffset=5;
     
     
     public Robot() {
@@ -33,31 +33,38 @@ public class Robot extends SampleRobot {
         drivetrain=new Drivetrain();
         elevator=new Elevator(4,5);
         vision=new VisionProcessor();
-        sc=new SendableChooser();
+        modeChooser=new SendableChooser();
         
         
-        sc.addDefault("No Autonomous", new AutoCommand(AutoCommand.MODE_NO_AUTONOMOUS));
-        sc.addObject("Single Tote Autonomous", new AutoCommand(AutoCommand.MODE_ONE_TOTE_AUTONOMOUS));
-        sc.addObject("Double Tote Autonomous (?)", new AutoCommand(AutoCommand.MODE_TWO_TOTE_AUTONOMOUS));
-    	sc.addObject("Triple Tote Autonomous (?)", new AutoCommand(AutoCommand.MODE_THREE_TOTE_AUTONOMOUS));
-    	sc.addObject("Move Forwards 10ft Autonomous", new AutoCommand(AutoCommand.MODE_FORWARDS_AUTONOMOUS));
-    	sc.addObject("Move Forwards 5ft Autonomous", new AutoCommand(AutoCommand.MODE_FORWARDS_SHORT));
-    	sc.addObject("TOTE and BIN Autonomous (???)", new AutoCommand(AutoCommand.MODE_ONE_TOTE_ONE_BIN_AUTONOMOUS));
+        modeChooser.addDefault("No Autonomous", new AutoCommand(AutoCommand.MODE_NO_AUTONOMOUS));
+        modeChooser.addObject("Single Tote Autonomous", new AutoCommand(AutoCommand.MODE_ONE_TOTE_AUTONOMOUS));
+        modeChooser.addObject("Double Tote Autonomous (?)", new AutoCommand(AutoCommand.MODE_TWO_TOTE_AUTONOMOUS));
+    	modeChooser.addObject("Triple Tote Autonomous (?)", new AutoCommand(AutoCommand.MODE_THREE_TOTE_AUTONOMOUS));
+    	modeChooser.addObject("Move Forwards 10ft Autonomous", new AutoCommand(AutoCommand.MODE_FORWARDS_AUTONOMOUS));
+    	modeChooser.addObject("Move Forwards 5ft Autonomous", new AutoCommand(AutoCommand.MODE_FORWARDS_SHORT));
+    	modeChooser.addObject("TOTE and BIN Autonomous (???)", new AutoCommand(AutoCommand.MODE_ONE_TOTE_ONE_BIN_AUTONOMOUS));
     	
-    	SmartDashboard.putData("Select an Autonomous Mode",sc);
+    	angleChooser=new SendableChooser();
+    	angleChooser.addObject("0 degrees", new AutoCommand(0));
+    	angleChooser.addDefault("5 degrees", new AutoCommand(5));
+    	angleChooser.addObject("10 degrees", new AutoCommand(10));
+    	
+    	SmartDashboard.putData("Select an Autonomous Mode",modeChooser);
     	
     }
     
     //Robot can (so will) begin flush with FIRST tote; Hence, do not need to 'drive up' to it
     public void autonomous(){
+    	AutoCommand angleCommand=(AutoCommand)angleChooser.getSelected();
+    	AutoCommand routine=(AutoCommand)modeChooser.getSelected();
     	
-    	AutoCommand ac=(AutoCommand)sc.getSelected();
+    	angleOffset=angleCommand.mode;
     	
     	drivetrain.encoder.reset();
     	drivetrain.calibrateGyro();
     	//this is necessary!!!
     	commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
-    	switch(ac.mode){
+    	switch(routine.mode){
     		case AutoCommand.MODE_THREE_TOTE_AUTONOMOUS:
     			threeToteAutonomous();
     			break;

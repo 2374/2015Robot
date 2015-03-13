@@ -37,10 +37,11 @@ public class Robot extends SampleRobot {
         
         sc.addDefault("No Autonomous", new AutoCommand(AutoCommand.MODE_NO_AUTONOMOUS));
         sc.addObject("Single Tote Autonomous", new AutoCommand(AutoCommand.MODE_ONE_TOTE_AUTONOMOUS));
-        sc.addObject("Double Tote Autonomous", new AutoCommand(AutoCommand.MODE_TWO_TOTE_AUTONOMOUS));
-    	sc.addObject("Triple Tote Autonomous", new AutoCommand(AutoCommand.MODE_THREE_TOTE_AUTONOMOUS));
-    	sc.addObject("Move Forwards Autonomous", new AutoCommand(AutoCommand.MODE_FORWARDS_AUTONOMOUS));
-    	sc.addObject("TOTE and BIN Autonomous", new AutoCommand(AutoCommand.MODE_ONE_TOTE_ONE_BIN_AUTONOMOUS));
+        sc.addObject("Double Tote Autonomous (?)", new AutoCommand(AutoCommand.MODE_TWO_TOTE_AUTONOMOUS));
+    	sc.addObject("Triple Tote Autonomous (?)", new AutoCommand(AutoCommand.MODE_THREE_TOTE_AUTONOMOUS));
+    	sc.addObject("Move Forwards 10ft Autonomous", new AutoCommand(AutoCommand.MODE_FORWARDS_AUTONOMOUS));
+    	sc.addObject("Move Forwards 5ft Autonomous", new AutoCommand(AutoCommand.MODE_FORWARDS_SHORT));
+    	sc.addObject("TOTE and BIN Autonomous (???)", new AutoCommand(AutoCommand.MODE_ONE_TOTE_ONE_BIN_AUTONOMOUS));
     	
     	SmartDashboard.putData("Select an Autonomous Mode",sc);
     	
@@ -55,16 +56,27 @@ public class Robot extends SampleRobot {
     	drivetrain.calibrateGyro();
     	//this is necessary!!!
     	commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
-    	
-    	if(ac.mode==AutoCommand.MODE_THREE_TOTE_AUTONOMOUS){
-    		threeToteAutonomous();
-    	}
-    	if(ac.mode==AutoCommand.MODE_ONE_TOTE_ONE_BIN_AUTONOMOUS){
-    		oneToteOneBinAutonomous();
-    	}
-    	if(ac.mode==AutoCommand.MODE_FORWARDS_AUTONOMOUS){
-    		this.scoreTotes();
-    		this.followAllCommands();
+    	switch(ac.mode){
+    		case AutoCommand.MODE_THREE_TOTE_AUTONOMOUS:
+    			threeToteAutonomous();
+    			break;
+    		case AutoCommand.MODE_ONE_TOTE_AUTONOMOUS:
+    			oneToteAutonomous();
+    			break;
+    		case AutoCommand.MODE_ONE_TOTE_ONE_BIN_AUTONOMOUS:
+    			oneToteOneBinAutonomous();
+    			break;
+    		case AutoCommand.MODE_TWO_TOTE_AUTONOMOUS:
+    			twoToteAutonomous();
+    			break;
+    		case AutoCommand.MODE_FORWARDS_AUTONOMOUS:
+    			commandManager.moveDistance(10,0.7);
+        		this.followAllCommands();
+        		break;
+    		case AutoCommand.MODE_FORWARDS_SHORT:
+    			commandManager.moveDistance(5,0.4);
+        		this.followAllCommands();
+        		break;
     	}
     	//if(SmarthDashboard.get)
 		//commandManager.moveDistance(5, 0.5);//(distance, speed) with distance in feet
@@ -109,7 +121,9 @@ public class Robot extends SampleRobot {
     			
     			//turnToHeading((vision.getCenterX()-160)*fov/320);
     			
-    			if((joystick.getRawButton(5) || joystick.getRawButton(6)) 
+    			//I have disabled vision functionality for now, so we don't crash
+    			
+    			/*if((joystick.getRawButton(5) || joystick.getRawButton(6)) 
     					&& !checkDriverInputs() && count%3==0){
             		//process the camera input into a vision report
             		VisionReport v=vision.processCamera();
@@ -143,6 +157,7 @@ public class Robot extends SampleRobot {
     			else{
     				buttonPressed=false; 
     			}
+    			*/
     		}
     		//SmartDashboard.putNumber("AutonomousValue", SmartDashboard.getData("Autonomuos"));
     		//int autonomousNum = SmartDashboard.getData("Autonomus");
@@ -191,20 +206,20 @@ public class Robot extends SampleRobot {
     }
     public void oneToteAutonomous(){
     	//pick up
-    	pickUp();
+    	commandManager.moveAndElevate(0.6, 0.2, 0);
+		commandManager.moveElevator(2);
     	//move to autonomous zone
     	commandManager.turnToHeading(90, .5);
     	commandManager.moveDistance(toAutonomousZone-5, 0.7);
     	
     	commandManager.moveAndElevate(5, 0.5, 0);
-    	commandManager.moveDistance(-2.5, 0.5);
+    	//commandManager.moveDistance(-2.5, 0.5);
     	
     	followAllCommands();
     }
     
     public void oneToteOneBinAutonomous(){
     	pickUp();
-		
 		//move to push the bin
 		commandManager.turnToHeading(-45, 0.5);
 		commandManager.moveDistance(8.5, 0.5);//8.5 feet is empirical
@@ -255,11 +270,11 @@ public class Robot extends SampleRobot {
 		//pickUp();
 		
 		commandManager.turnToHeading(90, 0.5); //move to the scoring position and score
-		/*
-		commandManager.moveAndElevate(12, 0.8,0);
 		
-		commandManager.moveDistance(-2,0.5); //retreat
-		*/
+		commandManager.moveAndElevate(12, 0.8,0.5);
+		
+		//commandManager.moveDistance(-2,0.5); //retreat
+		
 		
 		followAllCommands();
     }

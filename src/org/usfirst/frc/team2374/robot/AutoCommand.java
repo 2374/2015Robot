@@ -24,5 +24,6 @@ public class AutoCommand {
 	public static final int MODE_TWO_TOTE_AUTONOMOUS=2;
 	public static final int MODE_THREE_TOTE_AUTONOMOUS=3;
 	public static final int MODE_ONE_TOTE_ONE_BIN_AUTONOMOUS=4;
+	public static final int MODE_FORWARDS_SHORT=5;
 	
 }

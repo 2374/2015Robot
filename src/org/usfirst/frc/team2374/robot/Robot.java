@@ -45,11 +45,15 @@ public class Robot extends SampleRobot {
     	modeChooser.addObject("TOTE and BIN Autonomous (???)", new AutoCommand(AutoCommand.MODE_ONE_TOTE_ONE_BIN_AUTONOMOUS));
     	
     	angleChooser=new SendableChooser();
-    	angleChooser.addObject("0 degrees", new AutoCommand(0));
-    	angleChooser.addDefault("5 degrees", new AutoCommand(5));
+    	angleChooser.addDefault("0 degrees", new AutoCommand(0));
+    	angleChooser.addObject("5 degrees", new AutoCommand(5));
     	angleChooser.addObject("10 degrees", new AutoCommand(10));
+    	angleChooser.addObject("15 degrees", new AutoCommand(15));
+    	angleChooser.addObject("20 degrees", new AutoCommand(20));
+    	angleChooser.addObject("20 degrees", new AutoCommand(25));
     	
     	SmartDashboard.putData("Select an Autonomous Mode",modeChooser);
+    	SmartDashboard.putData("Select a starting angle",angleChooser);
     	
     }
     

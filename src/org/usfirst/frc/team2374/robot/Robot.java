@@ -22,7 +22,7 @@ public class Robot extends SampleRobot {
     final double distBetweenTotes=2.75; //from front edge of tote 1 to back edge of tote 2
     final double toteLength = 4;//longer side
     final double distRobotDrive = 6.75; // distance robot has to drive to get from picking up tote one to picking up tote 2
-    final double toAutonomousZone = 13.5;// distance to middle of the autonomous zone from picking up tote 3
+    final double toAutonomousZone = 8;// distance to middle of the autonomous zone from picking up tote 3
     Command autonomousCommand;
     double angleOffset=5;
     
@@ -50,7 +50,7 @@ public class Robot extends SampleRobot {
     	angleChooser.addObject("10 degrees", new AutoCommand(10));
     	angleChooser.addObject("15 degrees", new AutoCommand(15));
     	angleChooser.addObject("20 degrees", new AutoCommand(20));
-    	angleChooser.addObject("20 degrees", new AutoCommand(25));
+    	angleChooser.addObject("25 degrees", new AutoCommand(25));
     	
     	SmartDashboard.putData("Select an Autonomous Mode",modeChooser);
     	SmartDashboard.putData("Select a starting angle",angleChooser);
@@ -63,7 +63,7 @@ public class Robot extends SampleRobot {
     	AutoCommand routine=(AutoCommand)modeChooser.getSelected();
     	
     	angleOffset=angleCommand.mode;
-    	
+    	SmartDashboard.putNumber("AngleOffset",angleOffset);
     	drivetrain.encoder.reset();
     	drivetrain.calibrateGyro();
     	//this is necessary!!!
@@ -226,9 +226,9 @@ public class Robot extends SampleRobot {
 		commandManager.moveElevator(2);
     	//move to autonomous zone
     	commandManager.turnToHeading(90, .5);
-    	commandManager.moveDistance(toAutonomousZone-5, 0.7);
+    	commandManager.moveDistance(7.5, 0.7);
     	
-    	commandManager.moveAndElevate(5, 0.5, 0);
+    	//commandManager.moveAndElevate(5, 0.5, 0);
     	//commandManager.moveDistance(-2.5, 0.5);
     	
     	followAllCommands();
@@ -276,18 +276,18 @@ public class Robot extends SampleRobot {
 		
 		//move around the bin
 		commandManager.turnToHeading(-30+angleOffset, 0.5);
-		commandManager.moveAndElevate(3, 1, .75);
+		commandManager.moveAndElevate(3, .5, .75);
 		commandManager.turnToHeading(30+angleOffset,0.5);
-		commandManager.moveAndElevate(3, 1, 1.5);
+		commandManager.moveAndElevate(3, .5, 1.5);
 		commandManager.turnToHeading(0+angleOffset, 0.5);
-		commandManager.moveDistance(3, 1);
+		commandManager.moveDistance(3, .5);
 		
 		pickUp();//pick up the 2nd tote
 		//pickUp();
 		
 		commandManager.turnToHeading(90+angleOffset, 0.5); //move to the scoring position and score
 		
-		commandManager.moveAndElevate(12, 0.8,0.5);
+		commandManager.moveAndElevate(8, 0.8,0.5);
 		
 		//commandManager.moveDistance(-2,0.5); //retreat
 		

@@ -61,7 +61,7 @@ public class Elevator {
 			jag2.set(speed);
 		}
 		else{
-			if(speed>0 && hallSensor.get()){
+			if(speed>0 && !hallSensor.get()){
 				set(0);
 				encoder.reset();
 				return;

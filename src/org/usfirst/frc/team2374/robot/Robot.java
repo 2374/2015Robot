@@ -171,6 +171,7 @@ public class Robot extends SampleRobot {
         	SmartDashboard.putNumber("Elevator", elevator.getElevatorPosition()); 
         	SmartDashboard.putBoolean("LimitTop", elevator.limitTop.get());
         	SmartDashboard.putBoolean("LimitBottom", elevator.limitBottom.get());
+        	SmartDashboard.putBoolean("HallSensor", elevator.hallSensor.get());
         	SmartDashboard.putBoolean("LimitOVERRIDE", elevator.limitOVERRIDE);
         	SmartDashboard.putNumber("Commands", commandManager.commandList.size());
         	

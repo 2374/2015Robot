@@ -102,6 +102,9 @@ public class Robot extends SampleRobot {
     			if(joystick.getRawButton(8)){ //override limit switches if needed
     				elevator.limitOVERRIDE = true;
     			}
+    			if(joystick.getRawButton(7)){ //override limit switches if needed
+    				elevator.limitOVERRIDE = false;
+    			}
     			commandManager.setReferenceFrame(drivetrain.getEncoderFeet(), drivetrain.gyro.getAngle());
     			//0.25 is not enough to overcome friction
     			if(joystick.getPOV()==0)speedMultiplier=1;

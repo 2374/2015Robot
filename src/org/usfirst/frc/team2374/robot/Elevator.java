@@ -14,7 +14,8 @@ public class Elevator {
 	
 	//sensors
 	//limit switches
-	DigitalInput limitBottom, limitTop;
+	DigitalInput limitBottom, limitTop, hallSensor;
+	int hallPort=7;
 	int limitBottomPort = 5;
 	int limitTopPort=4;
 	boolean limitOVERRIDE; //to override using limit switches in case they're unresponsive
@@ -40,6 +41,7 @@ public class Elevator {
 		encoder = new Encoder(portA, portB);
 		limitBottom=new DigitalInput(limitBottomPort);
 		limitTop=new DigitalInput(limitTopPort);
+		hallSensor=new DigitalInput(hallPort);
 		limitOVERRIDE = false;
 	}
 	
@@ -59,7 +61,7 @@ public class Elevator {
 			jag2.set(speed);
 		}
 		else{
-			if(speed>0 && this.getElevatorPosition()<BOTTOM){
+			if(speed>0 && hallSensor.get()){
 				set(0);
 				encoder.reset();
 				return;

@@ -298,7 +298,7 @@ public class Robot extends SampleRobot {
 		
 		commandManager.turnToHeading(90+angleOffset, 0.5); //move to the scoring position and score
 		
-		commandManager.moveAndElevate(8, 0.8,0.5);
+		commandManager.moveAndElevate(8.5, 0.8,0.5); //changed from 8
 		
 		//commandManager.moveDistance(-2,0.5); //retreat
 		

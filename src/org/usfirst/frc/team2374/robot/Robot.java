@@ -56,7 +56,13 @@ public class Robot extends SampleRobot {
     	SmartDashboard.putData("Select a starting angle",angleChooser);
     	
     }
-    
+    public void disabled(){
+    	while(isDisabled()){
+    		AutoCommand routine=(AutoCommand)modeChooser.getSelected();
+    		SmartDashboard.putNumber("Routine ID", routine.mode);
+    		Timer.delay(0.05);
+    	}
+    }
     //Robot can (so will) begin flush with FIRST tote; Hence, do not need to 'drive up' to it
     public void autonomous(){
     	AutoCommand angleCommand=(AutoCommand)angleChooser.getSelected();
@@ -181,6 +187,7 @@ public class Robot extends SampleRobot {
         	SmartDashboard.putNumber("DriveEncoder", drivetrain.encoder.get());
         	SmartDashboard.putNumber("DriveEncoderAdj", drivetrain.getEncoderFeet());
         	SmartDashboard.putNumber("Elevator", elevator.getElevatorPosition()); 
+        	SmartDashboard.putNumber("ElevatorEnc", elevator.encoder.get()); 
         	SmartDashboard.putBoolean("LimitTop", elevator.limitTop.get());
         	SmartDashboard.putBoolean("LimitBottom", elevator.limitBottom.get());
         	SmartDashboard.putBoolean("HallSensor", elevator.hallSensor.get());
@@ -271,18 +278,22 @@ public class Robot extends SampleRobot {
 		followAllCommands();
     }
     public void twoToteAutonomous(){
+    	if(angleOffset>0){
+    		commandManager.moveDistance(0.6, 0.2);
+    		commandManager.turnToHeading(angleOffset, 0.3);
+    	}
     	//int angleOffset=5;
-    	commandManager.moveAndElevate(0.6, 0.2, 0);//pick the first tote up
+    	commandManager.moveAndElevate(0.4, 0.2, 0);//pick the first tote up
 		
 		//move around the bin
 		commandManager.turnToHeading(-30+angleOffset, 0.5);
-		commandManager.moveAndElevate(3, .5, .75);
-		commandManager.turnToHeading(30+angleOffset,0.5);
 		commandManager.moveAndElevate(3, .5, 1.5);
+		commandManager.turnToHeading(30+angleOffset,0.5);
+		commandManager.moveAndElevate(2, .5, 2);
 		commandManager.turnToHeading(0+angleOffset, 0.5);
 		commandManager.moveDistance(3, .5);
 		
-		pickUp();//pick up the 2nd tote
+		commandManager.moveElevator(0);//pick up the 2nd tote
 		//pickUp();
 		
 		commandManager.turnToHeading(90+angleOffset, 0.5); //move to the scoring position and score
@@ -296,7 +307,12 @@ public class Robot extends SampleRobot {
     }
     public void threeToteAutonomous(){
     	//int angleOffset=5;
-    	commandManager.moveAndElevate(0.6, 0.2, 0);
+    	if(angleOffset>0){
+    		commandManager.moveDistance(0.6, 0.2);
+    		commandManager.turnToHeading(angleOffset, 0.3);
+    	}
+    	//int angleOffset=5;
+    	commandManager.moveAndElevate(0.4, 0.2, 0);//pick the first tote up
     	//this program picks up a bin, moves the robot, picks up a tote, then scores them
     	//QUESTION: robot's starting orientation
 		commandManager.moveElevator(0);//pick the first tote up

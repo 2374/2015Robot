@@ -24,7 +24,7 @@ public class Elevator {
 	int portA = 0;
 	int portB = 1;
 	//variables for encoder
-	public static final double FEET_PER_ENCODER_COUNT=3.5/6000.;//CHECK SIGNS
+	public static final double FEET_PER_ENCODER_COUNT=2.9/7000.;//CHECK SIGNS
 	public static final double ADJUSTMENT_SCALE=20;
 	//in feet; please verify
 	public static final double TOP = 2.5;
